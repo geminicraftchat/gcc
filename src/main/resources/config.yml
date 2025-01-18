@@ -5,12 +5,18 @@ debug: false
 
 # API 设置
 api:
-  # API密钥 (也可以通过环境变量 GEMINI_API_KEY 设置)
-  key: "your-api-key-here"
-  # 使用的模型
-  model: "gemini-pro"
-  # 代理设置
+  # API类型: direct(直连) 或 proxy(中转)
+  type: "direct"
+  # 直连设置
+  direct:
+    key: "your-api-key-here"
+    model: "gemini-pro"
+  # 中转API设置
   proxy:
+    url: "https://your-proxy-api.com/v1/chat"
+    key: "your-proxy-key"
+  # 代理服务器设置
+  http_proxy:
     enabled: false
     host: "127.0.0.1"
     port: 7890
@@ -32,6 +38,20 @@ chat:
   cooldown: 10000
   # 历史记录长度限制
   max_history: 10
+  # 广播设置
+  broadcast:
+    enabled: true                # 是否启用广播
+    to_players: true            # 是否广播给其他玩家
+    to_console: true            # 是否广播给控制台
+    format:
+      question: "§8[AI] §7{player} §f问: §7{message}"    # 问题广播格式
+      answer: "§8[AI] §7回答 §f{player}: §7{message}"    # 回答广播格式
+    ignore_personas:            # 不广播的人设列表
+      - "private"
+      - "secret"
+    permissions:
+      receive: "gcc.broadcast.receive"  # 接收广播的权限
+      bypass: "gcc.broadcast.bypass"    # 跳过广播的权限
 
 # 人设配置
 personas:

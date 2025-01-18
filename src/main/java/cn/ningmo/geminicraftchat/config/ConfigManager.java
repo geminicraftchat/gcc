@@ -92,4 +92,28 @@ public class ConfigManager {
     public int getProxyPort() {
         return config.getInt("api.proxy.port", 7890);
     }
+
+    public boolean isProxyApi() {
+        return "proxy".equalsIgnoreCase(config.getString("api.type", "direct"));
+    }
+
+    public String getProxyApiUrl() {
+        return config.getString("api.proxy.url");
+    }
+
+    public String getProxyApiKey() {
+        return config.getString("api.proxy.key");
+    }
+
+    public boolean isHttpProxyEnabled() {
+        return config.getBoolean("api.http_proxy.enabled", false);
+    }
+
+    public String getHttpProxyHost() {
+        return config.getString("api.http_proxy.host", "127.0.0.1");
+    }
+
+    public int getHttpProxyPort() {
+        return config.getInt("api.http_proxy.port", 7890);
+    }
 } 

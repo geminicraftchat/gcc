@@ -1,5 +1,5 @@
 name: GeminiCraftChat
-version: 1.0.0
+version: 1.0.1
 main: cn.ningmo.geminicraftchat.GeminiCraftChat
 api-version: '1.13'
 authors: [ningmo]
@@ -25,4 +25,10 @@ permissions:
     default: op
   gcc.persona.delete:
     description: 允许删除人设
+    default: op
+  gcc.broadcast.receive:
+    description: 允许接收AI对话广播
+    default: true
+  gcc.broadcast.bypass:
+    description: 允许跳过AI对话广播
     default: op 

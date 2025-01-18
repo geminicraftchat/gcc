@@ -41,11 +41,21 @@ public class ChatManager {
         // 获取当前人设
         Optional<Persona> persona = getCurrentPersona(playerId);
 
+        // 广播问题
+        if (shouldBroadcast(player, persona)) {
+            broadcastQuestion(player, message);
+        }
+
         // 发送请求
         geminiService.sendMessage(playerId, message, persona)
             .thenAccept(response -> {
                 String formattedResponse = String.format(configManager.getResponseFormat(), response);
                 player.sendMessage(formattedResponse);
+                
+                // 广播回答
+                if (shouldBroadcast(player, persona)) {
+                    broadcastAnswer(player, response);
+                }
             })
             .exceptionally(throwable -> {
                 String error = String.format(configManager.getErrorFormat(), throwable.getMessage());
@@ -108,5 +118,71 @@ public class ChatManager {
 
     public void clearAllHistory() {
         geminiService.clearAllHistory();
+    }
+
+    private boolean shouldBroadcast(Player player, Optional<Persona> persona) {
+        // 检查是否启用广播
+        if (!configManager.getConfig().getBoolean("chat.broadcast.enabled", true)) {
+            return false;
+        }
+
+        // 检查玩家是否有跳过广播的权限
+        if (player.hasPermission("gcc.broadcast.bypass")) {
+            return false;
+        }
+
+        // 检查当前人设是否在忽略列表中
+        if (persona.isPresent()) {
+            List<String> ignorePersonas = configManager.getConfig().getStringList("chat.broadcast.ignore_personas");
+            if (ignorePersonas.contains(playerPersonas.get(player.getName()))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void broadcastQuestion(Player player, String message) {
+        String format = configManager.getConfig().getString("chat.broadcast.format.question", 
+            "§8[AI] §7{player} §f问: §7{message}");
+        String broadcast = format
+            .replace("{player}", player.getName())
+            .replace("{message}", message);
+
+        // 广播给其他玩家
+        if (configManager.getConfig().getBoolean("chat.broadcast.to_players", true)) {
+            for (Player p : plugin.getServer().getOnlinePlayers()) {
+                if (p != player && p.hasPermission("gcc.broadcast.receive")) {
+                    p.sendMessage(broadcast);
+                }
+            }
+        }
+
+        // 广播给控制台
+        if (configManager.getConfig().getBoolean("chat.broadcast.to_console", true)) {
+            plugin.getLogger().info(ChatColor.stripColor(broadcast));
+        }
+    }
+
+    private void broadcastAnswer(Player player, String response) {
+        String format = configManager.getConfig().getString("chat.broadcast.format.answer", 
+            "§8[AI] §7回答 §f{player}: §7{message}");
+        String broadcast = format
+            .replace("{player}", player.getName())
+            .replace("{message}", response);
+
+        // 广播给其他玩家
+        if (configManager.getConfig().getBoolean("chat.broadcast.to_players", true)) {
+            for (Player p : plugin.getServer().getOnlinePlayers()) {
+                if (p != player && p.hasPermission("gcc.broadcast.receive")) {
+                    p.sendMessage(broadcast);
+                }
+            }
+        }
+
+        // 广播给控制台
+        if (configManager.getConfig().getBoolean("chat.broadcast.to_console", true)) {
+            plugin.getLogger().info(ChatColor.stripColor(broadcast));
+        }
     }
 } 
