@@ -1,0 +1,28 @@
+name: GeminiCraftChat
+version: 1.0.0
+main: cn.ningmo.geminicraftchat.GeminiCraftChat
+api-version: '1.13'
+authors: [ningmo]
+description: 将Gemini的聊天系统带入Minecraft
+commands:
+  gcc:
+    description: GeminiCraftChat主命令
+    usage: /gcc [reload]
+    aliases: [geminicraftchat]
+
+permissions:
+  gcc.use:
+    description: 允许使用基本功能
+    default: true
+  gcc.admin:
+    description: 允许使用管理员功能
+    default: op
+  gcc.persona.create:
+    description: 允许创建人设
+    default: op
+  gcc.persona.edit:
+    description: 允许编辑人设
+    default: op
+  gcc.persona.delete:
+    description: 允许删除人设
+    default: op 

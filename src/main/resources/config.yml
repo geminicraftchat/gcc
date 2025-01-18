@@ -1,0 +1,3 @@
+api:
+  project_id: "your-project-id"  # Google Cloud Project ID
+  location: "us-central1"        # API 地区 
