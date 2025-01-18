@@ -1,114 +1,129 @@
 package cn.ningmo.geminicraftchat.commands;
 
+import cn.ningmo.geminicraftchat.GeminiCraftChat;
+import cn.ningmo.geminicraftchat.chat.ChatManager;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import cn.ningmo.geminicraftchat.GeminiCraftChat;
-import cn.ningmo.geminicraftchat.persona.PersonaManager;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class MainCommand implements CommandExecutor {
     private final GeminiCraftChat plugin;
+    private final ChatManager chatManager;
 
     public MainCommand(GeminiCraftChat plugin) {
         this.plugin = plugin;
+        this.chatManager = plugin.getChatManager();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission("gcc.use")) {
-            sender.sendMessage("§c你没有权限使用此命令！");
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "此命令只能由玩家执行！");
             return true;
         }
+
+        Player player = (Player) sender;
 
         if (args.length == 0) {
-            sendHelpMessage(sender);
+            sendHelpMessage(player);
             return true;
         }
 
-        // 处理子命令
         switch (args[0].toLowerCase()) {
             case "reload":
-                if (sender.hasPermission("gcc.admin")) {
-                    plugin.getConfigManager().loadConfig();
-                    sender.sendMessage("§a配置已重新加载！");
+                if (!player.hasPermission("gcc.admin")) {
+                    player.sendMessage(ChatColor.RED + "你没有权限执行此命令！");
+                    return true;
+                }
+                plugin.getConfigManager().loadConfig();
+                player.sendMessage(ChatColor.GREEN + "配置已重新加载！");
+                break;
+
+            case "clear":
+                if (args.length == 2 && args[1].equalsIgnoreCase("all")) {
+                    if (!player.hasPermission("gcc.admin")) {
+                        player.sendMessage(ChatColor.RED + "你没有权限执行此命令！");
+                        return true;
+                    }
+                    chatManager.clearAllHistory();
+                    player.sendMessage(ChatColor.GREEN + "已清除所有玩家的对话历史！");
                 } else {
-                    sender.sendMessage("§c你没有权限执行此命令！");
+                    chatManager.clearHistory(player.getName());
+                    player.sendMessage(ChatColor.GREEN + "已清除你的对话历史！");
                 }
                 break;
+
             case "persona":
-                handlePersonaCommand(sender, args);
+                if (args.length < 2) {
+                    player.sendMessage(ChatColor.RED + "用法: /gcc persona <list|switch> [人设名称]");
+                    return true;
+                }
+                handlePersonaCommand(player, args);
                 break;
+
+            case "debug":
+                if (!player.hasPermission("gcc.admin")) {
+                    player.sendMessage(ChatColor.RED + "你没有权限执行此命令！");
+                    return true;
+                }
+                boolean debugEnabled = plugin.getConfigManager().getConfig().getBoolean("debug", false);
+                plugin.getConfigManager().getConfig().set("debug", !debugEnabled);
+                plugin.saveConfig();
+                player.sendMessage(ChatColor.GREEN + "调试模式已" + (!debugEnabled ? "启用" : "禁用"));
+                break;
+
             default:
-                sendHelpMessage(sender);
+                sendHelpMessage(player);
                 break;
         }
 
         return true;
     }
 
-    private void sendHelpMessage(CommandSender sender) {
-        sender.sendMessage("§6=== GeminiCraftChat 帮助 ===");
-        sender.sendMessage("§f/gcc reload §7- 重新加载配置");
-        sender.sendMessage("§f/gcc persona §7- 人设命令");
-        // 添加更多帮助信息
-    }
-
-    private void handlePersonaCommand(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("§c该命令只能由玩家使用！");
-            return;
-        }
-        
-        Player player = (Player) sender;
-        if (args.length < 2) {
-            sendPersonaHelpMessage(player);
-            return;
-        }
-
-        PersonaManager personaManager = plugin.getChatManager().getPersonaManager();
-        
+    private void handlePersonaCommand(Player player, String[] args) {
         switch (args[1].toLowerCase()) {
             case "list":
-                sendPersonaList(player, personaManager);
+                List<String> personas = chatManager.getAvailablePersonas();
+                player.sendMessage(ChatColor.GREEN + "可用的人设列表:");
+                for (String persona : personas) {
+                    String name = plugin.getConfigManager().getConfig().getString("personas." + persona + ".name", persona);
+                    String desc = plugin.getConfigManager().getConfig().getString("personas." + persona + ".description", "");
+                    player.sendMessage(ChatColor.YELLOW + "- " + name + ChatColor.GRAY + ": " + desc);
+                }
                 break;
-            case "set":
+
+            case "switch":
                 if (args.length < 3) {
-                    player.sendMessage("§c用法: /gcc persona set <人设名称>");
+                    player.sendMessage(ChatColor.RED + "请指定要切换的人设名称！");
                     return;
                 }
-                setPlayerPersona(player, args[2], personaManager);
+                String personaName = args[2].toLowerCase();
+                if (chatManager.switchPersona(player, personaName)) {
+                    player.sendMessage(ChatColor.GREEN + "已切换到人设: " + personaName);
+                } else {
+                    player.sendMessage(ChatColor.RED + "找不到指定的人设: " + personaName);
+                }
                 break;
-            case "clear":
-                personaManager.clearPlayerPersona(player);
-                player.sendMessage("§a已清除当前人设！");
-                break;
+
             default:
-                sendPersonaHelpMessage(player);
+                player.sendMessage(ChatColor.RED + "未知的人设命令！用法: /gcc persona <list|switch> [人设名称]");
                 break;
         }
     }
 
-    private void sendPersonaList(Player player, PersonaManager personaManager) {
-        player.sendMessage("§6=== 可用人设列表 ===");
-        personaManager.getAllPersonas().forEach((key, persona) -> {
-            player.sendMessage(String.format("§f%s §7- §f%s", key, persona.getDescription()));
-        });
-    }
-
-    private void setPlayerPersona(Player player, String personaKey, PersonaManager personaManager) {
-        if (personaManager.getPersona(personaKey).isPresent()) {
-            personaManager.setPlayerPersona(player, personaKey);
-            player.sendMessage("§a已设置人设为: " + personaKey);
-        } else {
-            player.sendMessage("§c找不到该人设！");
+    private void sendHelpMessage(Player player) {
+        player.sendMessage(ChatColor.GREEN + "=== GeminiCraftChat 命令帮助 ===");
+        player.sendMessage(ChatColor.YELLOW + "/gcc reload " + ChatColor.GRAY + "- 重新加载配置文件");
+        player.sendMessage(ChatColor.YELLOW + "/gcc clear " + ChatColor.GRAY + "- 清除你的对话历史");
+        player.sendMessage(ChatColor.YELLOW + "/gcc clear all " + ChatColor.GRAY + "- 清除所有玩家的对话历史");
+        player.sendMessage(ChatColor.YELLOW + "/gcc persona list " + ChatColor.GRAY + "- 查看可用的人设列表");
+        player.sendMessage(ChatColor.YELLOW + "/gcc persona switch <名称> " + ChatColor.GRAY + "- 切换到指定人设");
+        if (player.hasPermission("gcc.admin")) {
+            player.sendMessage(ChatColor.YELLOW + "/gcc debug " + ChatColor.GRAY + "- 切换调试模式");
         }
-    }
-
-    private void sendPersonaHelpMessage(Player player) {
-        player.sendMessage("§6=== 人设命令帮助 ===");
-        player.sendMessage("§f/gcc persona list §7- 查看可用人设列表");
-        player.sendMessage("§f/gcc persona set <名称> §7- 设置当前人设");
-        player.sendMessage("§f/gcc persona clear §7- 清除当前人设");
     }
 } 

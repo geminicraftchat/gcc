@@ -54,4 +54,13 @@ filter:
   words:
     - "敏感词1"
     - "敏感词2"
-  replacement: "***" 
+  replacement: "***"
+
+# 命令设置
+commands:
+  # 中文命令
+  chinese:
+    clear_memory: ["清除记忆", "清空记忆", "忘记对话"]
+    switch_persona: ["切换人设", "换个角色", "更换人设"]
+    list_personas: ["查看人设", "人设列表", "所有角色"]
+    help: ["帮助", "指令", "命令"] 
