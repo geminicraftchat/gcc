@@ -155,4 +155,8 @@ public class GeminiCraftChat extends JavaPlugin {
             pluginLogger.info("[DEBUG] " + message);
         }
     }
+
+    public boolean isDebugEnabled() {
+        return configManager.getConfig().getBoolean("debug", false);
+    }
 } 

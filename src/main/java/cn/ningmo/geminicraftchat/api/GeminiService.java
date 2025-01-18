@@ -18,12 +18,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GeminiService {
     private final GeminiCraftChat plugin;
+    private final ConfigManager configManager;
     private final Map<String, List<Map<String, String>>> chatHistories;
     private final Gson gson;
     private final String apiEndpoint = "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent";
 
     public GeminiService(GeminiCraftChat plugin) {
         this.plugin = plugin;
+        this.configManager = plugin.getConfigManager();
         this.chatHistories = new ConcurrentHashMap<>();
         this.gson = new Gson();
     }
@@ -33,31 +35,32 @@ public class GeminiService {
             try {
                 List<Map<String, String>> history = chatHistories.computeIfAbsent(playerId, k -> new ArrayList<>());
                 
-                // 如果有人设且历史记录为空，添加人设上下文
-                if (persona.isPresent() && history.isEmpty()) {
-                    Map<String, String> personaMessage = new HashMap<>();
-                    personaMessage.put("role", "user");
-                    personaMessage.put("content", persona.get().getContext());
-                    history.add(personaMessage);
-                }
-
-                // 添加用户消息
-                Map<String, String> userMessage = new HashMap<>();
-                userMessage.put("role", "user");
-                userMessage.put("content", message);
-                history.add(userMessage);
-
                 // 构建请求体
                 JsonObject requestBody = new JsonObject();
                 JsonArray contents = new JsonArray();
                 
-                for (Map<String, String> msg : history) {
-                    JsonObject content = new JsonObject();
-                    content.addProperty("role", msg.get("role"));
-                    content.addProperty("parts", msg.get("content"));
-                    contents.add(content);
+                // 如果有人设且历史记录为空，添加人设上下文
+                if (persona.isPresent() && history.isEmpty()) {
+                    JsonObject personaContent = new JsonObject();
+                    JsonArray parts = new JsonArray();
+                    JsonObject part = new JsonObject();
+                    part.addProperty("text", persona.get().getContext());
+                    parts.add(part);
+                    personaContent.add("parts", parts);
+                    personaContent.addProperty("role", "user");
+                    contents.add(personaContent);
                 }
-                
+
+                // 添加用户消息
+                JsonObject userContent = new JsonObject();
+                JsonArray parts = new JsonArray();
+                JsonObject part = new JsonObject();
+                part.addProperty("text", message);
+                parts.add(part);
+                userContent.add("parts", parts);
+                userContent.addProperty("role", "user");
+                contents.add(userContent);
+
                 requestBody.add("contents", contents);
                 
                 JsonObject generationConfig = new JsonObject();
@@ -90,8 +93,8 @@ public class GeminiService {
                 history.add(aiMessage);
                 
                 // 限制历史记录长度
-                if (history.size() > 10) {
-                    history.subList(0, history.size() - 10).clear();
+                if (history.size() > configManager.getMaxHistory()) {
+                    history.subList(0, history.size() - configManager.getMaxHistory()).clear();
                 }
                 
                 return responseText;
@@ -103,9 +106,13 @@ public class GeminiService {
     }
 
     private String sendRequest(String requestBody) throws IOException {
-        ConfigManager config = plugin.getConfigManager();
-        String apiKey = config.getApiKey();
+        String apiKey = configManager.getApiKey();
         URL url = new URL(apiEndpoint + "?key=" + apiKey);
+        
+        if (plugin.isDebugEnabled()) {
+            plugin.debug("发送请求到: " + url);
+            plugin.debug("请求体: " + requestBody);
+        }
         
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
@@ -117,11 +124,26 @@ public class GeminiService {
             writer.flush();
         }
 
+        if (conn.getResponseCode() != 200) {
+            try (Scanner scanner = new Scanner(conn.getErrorStream(), StandardCharsets.UTF_8.name())) {
+                StringBuilder error = new StringBuilder();
+                while (scanner.hasNextLine()) {
+                    error.append(scanner.nextLine());
+                }
+                plugin.getLogger().warning("API 错误响应: " + error.toString());
+            }
+            throw new IOException("Server returned HTTP response code: " + conn.getResponseCode());
+        }
+
         StringBuilder response = new StringBuilder();
         try (Scanner scanner = new Scanner(conn.getInputStream(), StandardCharsets.UTF_8.name())) {
             while (scanner.hasNextLine()) {
                 response.append(scanner.nextLine());
             }
+        }
+
+        if (plugin.isDebugEnabled()) {
+            plugin.debug("API 响应: " + response.toString());
         }
 
         return response.toString();
