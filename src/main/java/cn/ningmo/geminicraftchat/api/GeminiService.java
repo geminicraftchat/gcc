@@ -102,6 +102,40 @@ public class GeminiService {
         return jsonResponse.get("response").getAsString();
     }
 
+    private HttpURLConnection createConnection(URL url) throws IOException {
+        HttpURLConnection conn;
+        
+        if (configManager.isHttpProxyEnabled()) {
+            String proxyHost = configManager.getHttpProxyHost();
+            int proxyPort = configManager.getHttpProxyPort();
+            String proxyType = configManager.getProxyType();
+            
+            plugin.debug("使用" + proxyType + "代理: " + proxyHost + ":" + proxyPort);
+            
+            if ("SOCKS".equalsIgnoreCase(proxyType)) {
+                System.setProperty("socksProxyHost", proxyHost);
+                System.setProperty("socksProxyPort", String.valueOf(proxyPort));
+            } else {
+                System.setProperty("http.proxyHost", proxyHost);
+                System.setProperty("http.proxyPort", String.valueOf(proxyPort));
+                System.setProperty("https.proxyHost", proxyHost);
+                System.setProperty("https.proxyPort", String.valueOf(proxyPort));
+            }
+            
+            conn = (HttpURLConnection) url.openConnection();
+        } else {
+            conn = (HttpURLConnection) url.openConnection();
+        }
+        
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setConnectTimeout(configManager.getConnectTimeout());
+        conn.setReadTimeout(configManager.getReadTimeout());
+        conn.setDoOutput(true);
+        
+        return conn;
+    }
+
     private String sendDirectRequest(String playerId, String message, Optional<Persona> persona) throws IOException {
         List<Map<String, String>> history = chatHistories.computeIfAbsent(playerId, k -> new ArrayList<>());
         
@@ -119,6 +153,8 @@ public class GeminiService {
             personaContent.add("parts", parts);
             personaContent.addProperty("role", "user");
             contents.add(personaContent);
+            
+            plugin.debug("添加人设上下文: " + persona.get().getContext());
         }
 
         // 添加用户消息
@@ -142,57 +178,81 @@ public class GeminiService {
 
         // 发送请求
         URL url = new URL(directApiEndpoint + "?key=" + configManager.getApiKey());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/json");
+        plugin.debug("发送请求到: " + url.toString().replaceAll("key=.*", "key=***"));
+        plugin.debug("请求体: " + requestBody.toString());
         
-        // 设置代理（如果启用）
-        if (configManager.isHttpProxyEnabled()) {
-            System.setProperty("http.proxyHost", configManager.getHttpProxyHost());
-            System.setProperty("http.proxyPort", String.valueOf(configManager.getHttpProxyPort()));
-            System.setProperty("https.proxyHost", configManager.getHttpProxyHost());
-            System.setProperty("https.proxyPort", String.valueOf(configManager.getHttpProxyPort()));
+        HttpURLConnection conn = createConnection(url);
+        
+        try {
+            // 发送请求体
+            try (OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
+                writer.write(requestBody.toString());
+                writer.flush();
+            }
+
+            // 获取响应
+            int responseCode = conn.getResponseCode();
+            plugin.debug("API响应代码: " + responseCode);
+
+            if (responseCode != 200) {
+                handleErrorResponse(conn);
+            }
+
+            String response = readResponse(conn);
+            plugin.debug("API原始响应: " + response);
+
+            JsonObject jsonResponse = gson.fromJson(response, JsonObject.class);
+            String responseText = jsonResponse
+                .getAsJsonArray("candidates")
+                .get(0)
+                .getAsJsonObject()
+                .getAsJsonObject("content")
+                .getAsJsonArray("parts")
+                .get(0)
+                .getAsJsonObject()
+                .get("text")
+                .getAsString();
+
+            // 更新历史记录
+            updateChatHistory(playerId, message, responseText);
+            plugin.debug("更新历史记录成功");
+
+            return responseText;
+        } catch (Exception e) {
+            plugin.debug("请求失败: " + e.getMessage());
+            if (e instanceof IOException) {
+                throw (IOException) e;
+            }
+            throw new IOException("请求处理失败", e);
+        } finally {
+            // 清理代理设置
+            if (configManager.isHttpProxyEnabled()) {
+                String proxyType = configManager.getProxyType();
+                if ("SOCKS".equalsIgnoreCase(proxyType)) {
+                    System.clearProperty("socksProxyHost");
+                    System.clearProperty("socksProxyPort");
+                } else {
+                    System.clearProperty("http.proxyHost");
+                    System.clearProperty("http.proxyPort");
+                    System.clearProperty("https.proxyHost");
+                    System.clearProperty("https.proxyPort");
+                }
+            }
+            conn.disconnect();
         }
-
-        conn.setDoOutput(true);
-        try (OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
-            writer.write(requestBody.toString());
-            writer.flush();
-        }
-
-        // 处理响应
-        if (conn.getResponseCode() != 200) {
-            handleErrorResponse(conn);
-        }
-
-        String response = readResponse(conn);
-        JsonObject jsonResponse = gson.fromJson(response, JsonObject.class);
-        String responseText = jsonResponse
-            .getAsJsonArray("candidates")
-            .get(0)
-            .getAsJsonObject()
-            .getAsJsonObject("content")
-            .getAsJsonArray("parts")
-            .get(0)
-            .getAsJsonObject()
-            .get("text")
-            .getAsString();
-
-        // 更新历史记录
-        updateChatHistory(playerId, message, responseText);
-
-        return responseText;
     }
 
     private void handleErrorResponse(HttpURLConnection conn) throws IOException {
+        StringBuilder error = new StringBuilder();
         try (Scanner scanner = new Scanner(conn.getErrorStream(), StandardCharsets.UTF_8.name())) {
-            StringBuilder error = new StringBuilder();
             while (scanner.hasNextLine()) {
                 error.append(scanner.nextLine());
             }
-            plugin.getLogger().warning("API 错误响应: " + error.toString());
-            throw new IOException("Server returned HTTP response code: " + conn.getResponseCode());
         }
+        String errorMessage = error.toString();
+        plugin.debug("API错误响应: " + errorMessage);
+        plugin.getLogger().warning("API 错误响应: " + errorMessage);
+        throw new IOException("Server returned HTTP response code: " + conn.getResponseCode() + "\n" + errorMessage);
     }
 
     private String readResponse(HttpURLConnection conn) throws IOException {

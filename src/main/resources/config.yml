@@ -1,7 +1,7 @@
 # GeminiCraftChat 配置文件
 
 # 调试模式
-debug: false
+debug: true
 
 # API 设置
 api:
@@ -11,15 +11,19 @@ api:
   direct:
     key: "your-api-key-here"
     model: "gemini-pro"
+    timeout:
+      connect: 30000  # 连接超时时间(毫秒)
+      read: 30000     # 读取超时时间(毫秒)
   # 中转API设置
   proxy:
     url: "https://your-proxy-api.com/v1/chat"
     key: "your-proxy-key"
   # 代理服务器设置
   http_proxy:
-    enabled: false
+    enabled: true     # 启用代理
     host: "127.0.0.1"
     port: 7890
+    type: "SOCKS"     # 代理类型: HTTP 或 SOCKS
 
 # 聊天设置
 chat:

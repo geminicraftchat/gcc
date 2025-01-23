@@ -20,11 +20,27 @@ public class ConfigManager {
 
     public String getApiKey() {
         String envKey = System.getenv("GEMINI_API_KEY");
-        return envKey != null ? envKey : config.getString("api.key");
+        if (envKey != null && !envKey.isEmpty()) {
+            return envKey;
+        }
+        
+        if (isProxyApi()) {
+            String proxyKey = config.getString("api.proxy.key");
+            if (proxyKey != null && !proxyKey.isEmpty() && !proxyKey.equals("your-proxy-key")) {
+                return proxyKey;
+            }
+        } else {
+            String directKey = config.getString("api.direct.key");
+            if (directKey != null && !directKey.isEmpty() && !directKey.equals("your-api-key-here")) {
+                return directKey;
+            }
+        }
+        
+        return null;
     }
 
     public String getModel() {
-        return config.getString("api.model", "gemini-1.5-pro");
+        return config.getString("api.direct.model", "gemini-pro");
     }
 
     public boolean isProxyEnabled() {
@@ -115,5 +131,17 @@ public class ConfigManager {
 
     public int getHttpProxyPort() {
         return config.getInt("api.http_proxy.port", 7890);
+    }
+
+    public int getConnectTimeout() {
+        return config.getInt("api.direct.timeout.connect", 30000);
+    }
+
+    public int getReadTimeout() {
+        return config.getInt("api.direct.timeout.read", 30000);
+    }
+
+    public String getProxyType() {
+        return config.getString("api.http_proxy.type", "HTTP");
     }
 } 

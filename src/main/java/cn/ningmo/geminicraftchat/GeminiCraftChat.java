@@ -109,8 +109,12 @@ public class GeminiCraftChat extends JavaPlugin {
 
     private void validateConfig() {
         String apiKey = configManager.getApiKey();
-        if (apiKey == null || apiKey.isEmpty() || apiKey.equals("your-api-key-here")) {
-            throw new IllegalStateException("API密钥未设置");
+        if (apiKey == null || apiKey.isEmpty()) {
+            if (configManager.isProxyApi()) {
+                throw new IllegalStateException("中转API密钥未设置");
+            } else {
+                throw new IllegalStateException("Gemini API密钥未设置");
+            }
         }
         
         String model = configManager.getModel();
