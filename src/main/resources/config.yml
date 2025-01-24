@@ -6,7 +6,7 @@ debug: true
 # API 设置
 api:
   # API类型: direct(直连)、proxy(中转)或openai(OpenAI格式)
-  type: "direct"
+  type: "proxy"
   # 直连设置
   direct:
     key: "your-api-key-here"
@@ -16,7 +16,7 @@ api:
       read: 30000     # 读取超时时间(毫秒)
   # 中转API设置
   proxy:
-    url: "https://your-proxy-api.com/v1/chat"
+    url: "http://your-proxy-server.com/api/chat"
     key: "your-proxy-key"
     format: "gemini"  # gemini 或 openai
   # OpenAI格式API设置

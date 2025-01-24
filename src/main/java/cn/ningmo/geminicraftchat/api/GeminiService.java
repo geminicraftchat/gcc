@@ -78,38 +78,51 @@ public class GeminiService {
         }
 
         // 发送请求
-        URL url = new URL(configManager.getProxyApiUrl());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
+        String url = configManager.getProxyApiUrl();
+        plugin.debug("中转API URL: " + url);
+        plugin.debug("请求体: " + requestBody.toString());
+        
+        HttpURLConnection conn = createConnection(new URL(url));
+        
+        // 设置请求头
         conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Authorization", "Bearer " + configManager.getProxyApiKey());
-        
-        // 设置代理（如果启用）
-        if (configManager.isHttpProxyEnabled()) {
-            System.setProperty("http.proxyHost", configManager.getHttpProxyHost());
-            System.setProperty("http.proxyPort", String.valueOf(configManager.getHttpProxyPort()));
-            System.setProperty("https.proxyHost", configManager.getHttpProxyHost());
-            System.setProperty("https.proxyPort", String.valueOf(configManager.getHttpProxyPort()));
+        if (configManager.getProxyApiKey() != null && !configManager.getProxyApiKey().isEmpty()) {
+            conn.setRequestProperty("Authorization", "Bearer " + configManager.getProxyApiKey());
+            plugin.debug("已设置Authorization头");
         }
 
-        conn.setDoOutput(true);
-        try (OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
-            writer.write(requestBody.toString());
-            writer.flush();
+        try {
+            // 发送请求体
+            try (OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
+                writer.write(requestBody.toString());
+                writer.flush();
+            }
+
+            // 获取响应
+            int responseCode = conn.getResponseCode();
+            plugin.debug("API响应代码: " + responseCode);
+            
+            if (responseCode == 404) {
+                plugin.debug("API端点未找到，请检查URL是否正确");
+                throw new IOException("API端点未找到(404)，请检查中转服务器URL配置");
+            }
+
+            if (responseCode != 200) {
+                handleErrorResponse(conn);
+            }
+
+            String response = readResponse(conn);
+            plugin.debug("API原始响应: " + response);
+
+            JsonObject jsonResponse = gson.fromJson(response, JsonObject.class);
+            String responseText = jsonResponse.get("response").getAsString();
+
+            // 更新历史记录
+            updateChatHistory(playerId, message, responseText);
+            return responseText;
+        } finally {
+            conn.disconnect();
         }
-
-        // 处理响应
-        if (conn.getResponseCode() != 200) {
-            handleErrorResponse(conn);
-        }
-
-        String response = readResponse(conn);
-        JsonObject jsonResponse = gson.fromJson(response, JsonObject.class);
-        
-        // 更新历史记录
-        updateChatHistory(playerId, message, jsonResponse.get("response").getAsString());
-
-        return jsonResponse.get("response").getAsString();
     }
 
     private HttpURLConnection createConnection(URL url) throws IOException {
