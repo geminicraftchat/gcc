@@ -33,10 +33,20 @@ public class GeminiService {
     public CompletableFuture<String> sendMessage(String playerId, String message, Optional<Persona> persona) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                if (configManager.isProxyApi()) {
-                    return sendProxyRequest(playerId, message, persona);
-                } else {
-                    return sendDirectRequest(playerId, message, persona);
+                String apiType = configManager.getConfig().getString("api.type", "direct");
+                switch (apiType.toLowerCase()) {
+                    case "direct":
+                        return sendDirectRequest(playerId, message, persona);
+                    case "proxy":
+                        String format = configManager.getConfig().getString("api.proxy.format", "gemini");
+                        if ("openai".equals(format)) {
+                            return sendOpenAIRequest(playerId, message, persona);
+                        }
+                        return sendProxyRequest(playerId, message, persona);
+                    case "openai":
+                        return sendOpenAIRequest(playerId, message, persona);
+                    default:
+                        throw new IllegalStateException("未知的API类型: " + apiType);
                 }
             } catch (Exception e) {
                 plugin.getLogger().warning("发送消息失败: " + e.getMessage());
@@ -238,6 +248,93 @@ public class GeminiService {
                     System.clearProperty("https.proxyPort");
                 }
             }
+            conn.disconnect();
+        }
+    }
+
+    private String sendOpenAIRequest(String playerId, String message, Optional<Persona> persona) throws IOException {
+        JsonObject requestBody = new JsonObject();
+        requestBody.addProperty("model", configManager.getConfig().getString("api.openai.model", "gpt-3.5-turbo"));
+        
+        // 添加参数配置
+        requestBody.addProperty("temperature", configManager.getConfig().getDouble("api.openai.temperature", 0.7));
+        requestBody.addProperty("max_tokens", configManager.getConfig().getInt("api.openai.max_tokens", 1024));
+        requestBody.addProperty("top_p", configManager.getConfig().getDouble("api.openai.top_p", 0.95));
+        requestBody.addProperty("frequency_penalty", configManager.getConfig().getDouble("api.openai.frequency_penalty", 0.0));
+        requestBody.addProperty("presence_penalty", configManager.getConfig().getDouble("api.openai.presence_penalty", 0.0));
+        
+        // 构建消息数组
+        JsonArray messages = new JsonArray();
+        
+        // 添加人设系统消息
+        if (persona.isPresent()) {
+            JsonObject systemMessage = new JsonObject();
+            systemMessage.addProperty("role", "system");
+            systemMessage.addProperty("content", persona.get().getContext());
+            messages.add(systemMessage);
+        }
+        
+        // 添加历史记录
+        List<Map<String, String>> history = chatHistories.get(playerId);
+        if (history != null) {
+            for (Map<String, String> msg : history) {
+                JsonObject historyMessage = new JsonObject();
+                historyMessage.addProperty("role", msg.get("role"));
+                historyMessage.addProperty("content", msg.get("content"));
+                messages.add(historyMessage);
+            }
+        }
+        
+        // 添加当前消息
+        JsonObject userMessage = new JsonObject();
+        userMessage.addProperty("role", "user");
+        userMessage.addProperty("content", message);
+        messages.add(userMessage);
+        
+        requestBody.add("messages", messages);
+        
+        // 发送请求
+        String url = configManager.getConfig().getString("api.openai.url");
+        String apiKey = configManager.getConfig().getString("api.openai.key");
+        
+        plugin.debug("发送OpenAI格式请求到: " + url);
+        plugin.debug("请求体: " + requestBody.toString());
+        
+        HttpURLConnection conn = createConnection(new URL(url));
+        conn.setRequestProperty("Authorization", "Bearer " + apiKey);
+        
+        try {
+            try (OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
+                writer.write(requestBody.toString());
+                writer.flush();
+            }
+
+            int responseCode = conn.getResponseCode();
+            plugin.debug("API响应代码: " + responseCode);
+
+            if (responseCode != 200) {
+                handleErrorResponse(conn);
+            }
+
+            String response = readResponse(conn);
+            plugin.debug("API原始响应: " + response);
+
+            // 解析OpenAI响应格式
+            JsonObject jsonResponse = gson.fromJson(response, JsonObject.class);
+            String responseText = jsonResponse
+                .getAsJsonArray("choices")
+                .get(0)
+                .getAsJsonObject()
+                .getAsJsonObject("message")
+                .get("content")
+                .getAsString();
+
+            // 更新历史记录
+            updateChatHistory(playerId, message, responseText);
+            plugin.debug("更新历史记录成功");
+
+            return responseText;
+        } finally {
             conn.disconnect();
         }
     }

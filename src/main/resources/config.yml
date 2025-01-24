@@ -5,7 +5,7 @@ debug: true
 
 # API 设置
 api:
-  # API类型: direct(直连) 或 proxy(中转)
+  # API类型: direct(直连)、proxy(中转)或openai(OpenAI格式)
   type: "direct"
   # 直连设置
   direct:
@@ -18,9 +18,20 @@ api:
   proxy:
     url: "https://your-proxy-api.com/v1/chat"
     key: "your-proxy-key"
+    format: "gemini"  # gemini 或 openai
+  # OpenAI格式API设置
+  openai:
+    url: "https://your-openai-proxy.com/v1/chat/completions"
+    key: "your-openai-key"
+    model: "gpt-3.5-turbo"  # 模型名称
+    temperature: 0.7        # 温度
+    max_tokens: 1024        # 最大token数
+    top_p: 0.95            # 采样阈值
+    frequency_penalty: 0.0  # 频率惩罚
+    presence_penalty: 0.0   # 存在惩罚
   # 代理服务器设置
   http_proxy:
-    enabled: true     # 启用代理
+    enabled: false     # 启用代理
     host: "127.0.0.1"
     port: 7890
     type: "SOCKS"     # 代理类型: HTTP 或 SOCKS
