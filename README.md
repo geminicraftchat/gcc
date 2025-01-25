@@ -80,10 +80,10 @@ A: 访问 [Google AI Studio](https://makersuite.google.com/app/apikey) 创建 AP
 ## 贡献
 ### 感谢以下的贡献者：
 - 原作者  
-![ning-g-mo](https://github.com/ning-g-mo.png?size=32)  
+![ning-g-mo](https://github.com/ning-g-mo.png?size=64)  
 [ning-g-mo](https://github.com/ning-g-mo)  
 - 贡献者  
-![Mcxiaocaibug](https://github.com/Mcxiaocaibug.png?size=32)  
+![Mcxiaocaibug](https://github.com/Mcxiaocaibug.png?size=64)  
 [Mcxiaocaibug](https://github.com/Mcxiaocaibug)(提供测试效果相关的帮助)
 
 欢迎提交 Issue 和 Pull Request！
