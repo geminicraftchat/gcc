@@ -77,14 +77,14 @@ api:
 **Q: 如何获取 API 密钥？**  
 A: 访问 [Google AI Studio](https://makersuite.google.com/app/apikey) 创建 API 密钥。
 
-**Q: 为什么 AI 没有响应？**  
-A: 请检查：
-1. API 密钥是否正确配置
-2. 网络连接是否正常
-3. 是否处于冷却时间内
-4. 查看控制台错误信息
-
 ## 贡献
+### 感谢以下的贡献者：
+- 原作者  
+![ning-g-mo](https://github.com/ning-g-mo.png?size=32)  
+[ning-g-mo](https://github.com/ning-g-mo)  
+- 贡献者  
+![Mcxiaocaibug](https://github.com/Mcxiaocaibug?size=32)  
+[Mcxiaocaibug](https://github.com/Mcxiaocaibug)(提供测试效果相关的帮助)
 
 欢迎提交 Issue 和 Pull Request！
 
