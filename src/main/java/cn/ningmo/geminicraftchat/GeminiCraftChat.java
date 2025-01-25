@@ -3,6 +3,7 @@ package cn.ningmo.geminicraftchat;
 import org.bukkit.plugin.java.JavaPlugin;
 import cn.ningmo.geminicraftchat.config.ConfigManager;
 import cn.ningmo.geminicraftchat.commands.MainCommand;
+import cn.ningmo.geminicraftchat.commands.AdminCommand;
 import cn.ningmo.geminicraftchat.listeners.ChatListener;
 import cn.ningmo.geminicraftchat.chat.ChatManager;
 
@@ -28,15 +29,13 @@ public class GeminiCraftChat extends JavaPlugin {
             this.configManager = new ConfigManager(this);
             this.configManager.loadConfig();
             pluginLogger.info("配置加载成功");
-            
-            // 验证必要的配置项
-            validateConfig();
         } catch (Exception e) {
             pluginLogger.severe("配置加载失败: " + e.getMessage());
-            pluginLogger.severe("插件将被禁用");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
+            pluginLogger.severe("将使用默认配置");
         }
+        
+        // 验证配置并提供警告而不是直接禁用
+        validateConfig();
         
         // 初始化聊天管理器
         try {
@@ -44,20 +43,17 @@ public class GeminiCraftChat extends JavaPlugin {
             pluginLogger.info("聊天管理器初始化成功");
         } catch (Exception e) {
             pluginLogger.severe("聊天管理器初始化失败: " + e.getMessage());
-            pluginLogger.severe("插件将被禁用");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
+            pluginLogger.warning("AI聊天功能将不可用，但其他功能仍可使用");
         }
         
         // 注册命令
         try {
             getCommand("gcc").setExecutor(new MainCommand(this));
+            getCommand("gccadmin").setExecutor(new AdminCommand(this));
             pluginLogger.info("命令注册成功");
         } catch (Exception e) {
             pluginLogger.severe("命令注册失败: " + e.getMessage());
-            pluginLogger.severe("插件将被禁用");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
+            pluginLogger.warning("命令功能将不可用");
         }
         
         // 注册监听器
@@ -66,31 +62,13 @@ public class GeminiCraftChat extends JavaPlugin {
             pluginLogger.info("事件监听器注册成功");
         } catch (Exception e) {
             pluginLogger.severe("事件监听器注册失败: " + e.getMessage());
-            pluginLogger.severe("插件将被禁用");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
+            pluginLogger.warning("聊天监听功能将不可用");
         }
         
-        // 检查代理设置
-        if (configManager.isProxyEnabled()) {
-            pluginLogger.info("代理已启用 - " + configManager.getProxyHost() + ":" + configManager.getProxyPort());
-        }
+        // 输出配置信息
+        logConfigInfo();
         
-        // 输出触发词信息
-        pluginLogger.info("默认触发词: " + configManager.getDefaultTrigger());
-        pluginLogger.info("其他触发词: " + String.join(", ", configManager.getTriggerWords()));
-        
-        // 输出人设信息
-        int personaCount = configManager.getConfig().getConfigurationSection("personas").getKeys(false).size();
-        pluginLogger.info("已加载 " + personaCount + " 个人设");
-        
-        // 输出敏感词过滤信息
-        if (configManager.isFilterEnabled()) {
-            int filterWordCount = configManager.getFilterWords().size();
-            pluginLogger.info("敏感词过滤已启用，共 " + filterWordCount + " 个敏感词");
-        }
-        
-        pluginLogger.info("GeminiCraftChat v" + getDescription().getVersion() + " 插件已成功启动!");
+        pluginLogger.info("GeminiCraftChat v" + getDescription().getVersion() + " 插件已启动!");
     }
 
     @Override
@@ -108,33 +86,89 @@ public class GeminiCraftChat extends JavaPlugin {
     }
 
     private void validateConfig() {
+        boolean hasWarnings = false;
+        
+        // 检查API密钥
         String apiKey = configManager.getApiKey();
         if (apiKey == null || apiKey.isEmpty()) {
             if (configManager.isProxyApi()) {
-                throw new IllegalStateException("中转API密钥未设置");
+                pluginLogger.warning("中转API密钥未设置，AI聊天功能将不可用");
             } else {
-                throw new IllegalStateException("Gemini API密钥未设置");
+                pluginLogger.warning("Gemini API密钥未设置，AI聊天功能将不可用");
             }
+            hasWarnings = true;
         }
         
+        // 检查模型设置
         String model = configManager.getModel();
         if (model == null || model.isEmpty()) {
-            throw new IllegalStateException("模型名称未设置");
+            pluginLogger.warning("模型名称未设置，将使用默认模型 gemini-pro");
+            hasWarnings = true;
         }
         
+        // 检查冷却时间
         if (configManager.getCooldown() < 0) {
-            throw new IllegalStateException("冷却时间不能为负数");
+            pluginLogger.warning("冷却时间不能为负数，将使用默认值 10 秒");
+            hasWarnings = true;
         }
         
+        // 检查历史记录长度
         if (configManager.getMaxHistory() <= 0) {
-            throw new IllegalStateException("历史记录长度必须大于0");
+            pluginLogger.warning("历史记录长度必须大于0，将使用默认值 10");
+            hasWarnings = true;
         }
         
+        // 检查敏感词过滤
         if (configManager.isFilterEnabled()) {
             List<String> filterWords = configManager.getFilterWords();
-            if (filterWords == null) {
+            if (filterWords == null || filterWords.isEmpty()) {
                 pluginLogger.warning("敏感词过滤已启用但未配置敏感词列表");
+                hasWarnings = true;
             }
+        }
+        
+        if (hasWarnings) {
+            pluginLogger.warning("配置验证完成，存在一些警告，请检查配置文件");
+        } else {
+            pluginLogger.info("配置验证完成，一切正常");
+        }
+    }
+
+    private void logConfigInfo() {
+        // 检查代理设置
+        if (configManager.isHttpProxyEnabled()) {
+            pluginLogger.info("代理已启用 - " + configManager.getHttpProxyHost() + ":" + configManager.getHttpProxyPort() + 
+                " (" + configManager.getProxyType() + ")");
+        }
+        
+        // 输出API模式
+        String apiType = configManager.getConfig().getString("api.type", "direct");
+        pluginLogger.info("API模式: " + apiType.toUpperCase());
+        
+        // 输出触发词信息
+        pluginLogger.info("默认触发词: " + configManager.getDefaultTrigger());
+        List<String> triggers = configManager.getTriggerWords();
+        if (!triggers.isEmpty()) {
+            pluginLogger.info("其他触发词: " + String.join(", ", triggers));
+        }
+        
+        // 输出人设信息
+        try {
+            int personaCount = configManager.getConfig().getConfigurationSection("personas").getKeys(false).size();
+            pluginLogger.info("已加载 " + personaCount + " 个人设");
+        } catch (Exception e) {
+            pluginLogger.warning("人设配置加载失败，将使用默认人设");
+        }
+        
+        // 输出敏感词过滤信息
+        if (configManager.isFilterEnabled()) {
+            int filterWordCount = configManager.getFilterWords().size();
+            pluginLogger.info("敏感词过滤已启用，共 " + filterWordCount + " 个敏感词");
+        }
+        
+        // 输出调试状态
+        if (isDebugEnabled()) {
+            pluginLogger.info("调试模式已启用");
         }
     }
 
@@ -162,5 +196,10 @@ public class GeminiCraftChat extends JavaPlugin {
 
     public boolean isDebugEnabled() {
         return configManager.getConfig().getBoolean("debug", false);
+    }
+
+    public void validateAndLogConfig() {
+        validateConfig();
+        logConfigInfo();
     }
 } 

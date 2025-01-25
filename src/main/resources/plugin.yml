@@ -1,5 +1,5 @@
 name: GeminiCraftChat
-version: 1.0.3
+version: 1.0.4
 main: cn.ningmo.geminicraftchat.GeminiCraftChat
 api-version: '1.13'
 authors: [ningmo]
@@ -9,6 +9,10 @@ commands:
     description: GeminiCraftChat主命令
     usage: /gcc [reload]
     aliases: [geminicraftchat]
+  gccadmin:
+    description: GeminiCraftChat后台管理命令
+    usage: /gccadmin <reload|debug>
+    permission: gcc.admin
 
 permissions:
   gcc.use:
