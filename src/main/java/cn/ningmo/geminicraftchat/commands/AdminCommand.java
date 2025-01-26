@@ -43,21 +43,17 @@ public class AdminCommand implements CommandExecutor {
 
     private void handleReload(CommandSender sender) {
         try {
-            // 保存当前配置
-            plugin.saveConfig();
+            sender.sendMessage(ChatColor.YELLOW + "正在重载插件...");
             
-            // 重新加载配置
-            plugin.reloadConfig();
-            plugin.getConfigManager().loadConfig();
+            // 执行重载
+            plugin.reloadPlugin();
             
-            // 验证新配置
-            plugin.validateAndLogConfig();
-            
-            sender.sendMessage(ChatColor.GREEN + "配置已重新加载！");
-            plugin.getLogger().info("配置已通过后台命令重新加载");
+            sender.sendMessage(ChatColor.GREEN + "插件重载成功！");
+            plugin.getLogger().info("插件已通过后台命令重新加载");
         } catch (Exception e) {
-            sender.sendMessage(ChatColor.RED + "配置重载失败: " + e.getMessage());
-            plugin.getLogger().severe("配置重载失败: " + e.getMessage());
+            sender.sendMessage(ChatColor.RED + "插件重载失败: " + e.getMessage());
+            plugin.getLogger().severe("插件重载失败: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

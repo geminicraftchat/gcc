@@ -5,30 +5,53 @@ debug: true
 
 # API 设置
 api:
-  # API类型: direct(直连)、proxy(中转)或openai(OpenAI格式)
-  type: "proxy"
-  # 直连设置
-  direct:
-    key: "your-api-key-here"
-    model: "gemini-pro"
-    timeout:
-      connect: 30000  # 连接超时时间(毫秒)
-      read: 30000     # 读取超时时间(毫秒)
-  # 中转API设置
-  proxy:
-    url: "http://your-proxy-server.com/api/chat"
-    key: "your-proxy-key"
-    format: "gemini"  # gemini 或 openai
-  # OpenAI格式API设置
-  openai:
-    url: "https://your-openai-proxy.com/v1/chat/completions"
-    key: "your-openai-key"
-    model: "gpt-3.5-turbo"  # 模型名称
-    temperature: 0.7        # 温度
-    max_tokens: 1024        # 最大token数
-    top_p: 0.95            # 采样阈值
-    frequency_penalty: 0.0  # 频率惩罚
-    presence_penalty: 0.0   # 存在惩罚
+  # 负载均衡模式: single(单一), random(随机), failover(故障转移)
+  mode: "failover"
+  # API节点列表
+  items:
+    # 直连节点
+    - name: "gemini-direct-1"
+      type: "direct"        # 直连类型
+      enabled: true
+      weight: 1
+      key: "your-gemini-key-1"
+      model: "gemini-pro"
+      timeout:
+        connect: 30000
+        read: 30000
+    
+    # 中转节点1
+    - name: "proxy-1"
+      type: "proxy"         # 中转类型
+      enabled: true
+      weight: 2
+      url: "http://proxy1.example.com/api/chat"
+      key: "your-proxy-key-1"
+      timeout:
+        connect: 20000
+        read: 20000
+    
+    # OpenAI节点
+    - name: "openai-1"
+      type: "openai"        # OpenAI类型
+      enabled: true
+      weight: 1
+      url: "http://openai1.example.com/v1/chat"
+      key: "your-openai-key-1"
+      model: "gpt-3.5-turbo"
+      temperature: 0.7
+      max_tokens: 1024
+      timeout:
+        connect: 25000
+        read: 25000
+  
+  # 故障转移设置
+  failover:
+    max_retries: 3        # 最大重试次数
+    retry_delay: 1000     # 重试延迟(毫秒)
+    timeout: 30000        # 超时时间(毫秒)
+    error_threshold: 5    # 错误阈值，超过后暂时禁用该节点
+    recovery_time: 300000 # 恢复时间(毫秒)，节点被禁用后多久重试
   # 代理服务器设置
   http_proxy:
     enabled: false     # 启用代理
@@ -98,4 +121,42 @@ commands:
     clear_memory: ["清除记忆", "清空记忆", "忘记对话"]
     switch_persona: ["切换人设", "换个角色", "更换人设"]
     list_personas: ["查看人设", "人设列表", "所有角色"]
-    help: ["帮助", "指令", "命令"] 
+    help: ["帮助", "指令", "命令"]
+
+# 安全设置
+security:
+  # 命令检查
+  command_check:
+    enabled: true
+    blocked_commands:
+      - "/"
+      - "op"
+      - "stop"
+      - "start"
+      - "reload"
+      - "cd"
+      - "sudo"
+      - "execute"
+      - "run"
+      - "ban"
+      - "kick"
+      - "kill"
+      - "give"
+      - "gamemode"
+      - "tp"
+      - "whitelist"
+    blocked_keywords:
+      - "permission"
+      - "权限"
+      - "命令"
+      - "command"
+      - "admin"
+      - "op"
+      - "管理"
+      - "插件"
+  # 消息限制
+  limits:
+    max_message_length: 500    # 最大消息长度
+    max_response_length: 1000  # 最大响应长度
+    max_history_size: 20       # 最大历史记录条数
+    rate_limit: 5             # 每分钟最大请求次数 

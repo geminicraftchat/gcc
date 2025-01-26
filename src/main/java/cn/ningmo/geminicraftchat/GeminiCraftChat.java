@@ -202,4 +202,38 @@ public class GeminiCraftChat extends JavaPlugin {
         validateConfig();
         logConfigInfo();
     }
+
+    public void reloadPlugin() {
+        // 保存默认配置
+        saveDefaultConfig();
+        
+        // 重载配置文件
+        reloadConfig();
+        
+        try {
+            // 重新初始化配置管理器
+            configManager.loadConfig();
+            getLogger().info("配置文件重载成功");
+            
+            // 重新初始化聊天管理器
+            if (chatManager != null) {
+                // 保存所有历史记录（可选）
+                chatManager.saveAllHistory();
+                // 停止清理任务
+                chatManager.stopCleanupTask();
+            }
+            
+            chatManager = new ChatManager(this);
+            chatManager.startCleanupTask();
+            getLogger().info("聊天管理器重新初始化成功");
+            
+            // 验证新配置
+            validateAndLogConfig();
+            
+            getLogger().info("插件重载完成");
+        } catch (Exception e) {
+            getLogger().severe("插件重载失败: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 } 

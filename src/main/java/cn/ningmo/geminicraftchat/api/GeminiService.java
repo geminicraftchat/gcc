@@ -22,12 +22,39 @@ public class GeminiService {
     private final Map<String, List<Map<String, String>>> chatHistories;
     private final Gson gson;
     private final String directApiEndpoint = "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent";
+    private final Map<String, Object> config;
+    private final String type;
+    private final String name;
+    private final int weight;
 
-    public GeminiService(GeminiCraftChat plugin) {
+    @SuppressWarnings("unchecked")
+    public GeminiService(GeminiCraftChat plugin, Map<?, ?> config, String type) {
         this.plugin = plugin;
         this.configManager = plugin.getConfigManager();
         this.chatHistories = new ConcurrentHashMap<>();
         this.gson = new Gson();
+        
+        // 安全地转换配置
+        this.config = new HashMap<>();
+        config.forEach((k, v) -> {
+            if (k != null && v != null) {
+                this.config.put(k.toString(), v);
+            }
+        });
+        
+        this.type = type;
+        
+        // 安全地获取配置值
+        Object nameObj = config.get("name");
+        this.name = nameObj != null ? nameObj.toString() : "unnamed";
+        
+        // 安全地获取权重
+        Object weightObj = config.get("weight");
+        if (weightObj instanceof Number) {
+            this.weight = ((Number) weightObj).intValue();
+        } else {
+            this.weight = 1;
+        }
     }
 
     public CompletableFuture<String> sendMessage(String playerId, String message, Optional<Persona> persona) {
@@ -399,5 +426,13 @@ public class GeminiService {
 
     public void clearAllHistory() {
         chatHistories.clear();
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public String getEndpointInfo() {
+        return String.format("%s (%s)", name, type);
     }
 } 

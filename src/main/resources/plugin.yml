@@ -1,5 +1,5 @@
 name: GeminiCraftChat
-version: 1.0.4
+version: 1.0.5
 main: cn.ningmo.geminicraftchat.GeminiCraftChat
 api-version: '1.13'
 authors: [ningmo]
