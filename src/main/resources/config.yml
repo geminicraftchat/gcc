@@ -1,0 +1,146 @@
+# GeminiCraftChat 配置文件
+
+# 调试模式
+debug: true
+
+# API 设置
+api:
+  # 可用的模型列表
+  models:
+    gemini:
+      name: "Gemini Pro"
+      model: "gemini-pro"
+      base_url: "https://api.yoururl.com/v1/chat/completions"
+      api_key: "your-gemini-key-here"
+      max_tokens: 4096
+      temperature: 0.7
+      request_format: "openai"  # 使用 OpenAI 格式
+      parameters:
+        maxOutputTokens: 4096
+        temperature: 0.7
+        topP: 0.8
+        topK: 40
+        candidateCount: 1
+        stopSequences: []
+        safetySettings:
+          HARASSMENT: "BLOCK_NONE"
+          HATE_SPEECH: "BLOCK_NONE"
+          SEXUALLY_EXPLICIT: "BLOCK_NONE"
+          DANGEROUS_CONTENT: "BLOCK_NONE"
+    
+    deepseek:
+      name: "DeepSeek Chat"
+      model: "deepseek-chat"
+      base_url: "https://api.deepseek.com/v1/chat/completions"
+      api_key: "your-deepseek-key-here"
+      max_tokens: 4096
+      temperature: 0.7
+      parameters:
+        frequency_penalty: 0.0
+        presence_penalty: 0.0
+        top_p: 0.95
+        stop: null
+        safe_mode: false
+  
+  # 当前使用的模型
+  current_model: "gemini"
+  
+  # 代理服务器设置
+  http_proxy:
+    enabled: false
+    host: "127.0.0.1"
+    port: 7890
+    type: "SOCKS" # 可选值: SOCKS, HTTP
+
+# 权限设置
+permissions:
+  use_command: "gcc.use"
+  admin: "gcc.admin"
+  model_switch: "gcc.model.switch"
+  temperature_adjust: "gcc.temperature.adjust"
+  broadcast_receive: "gcc.broadcast.receive"
+  broadcast_bypass: "gcc.broadcast.bypass"
+
+# 日志设置
+logging:
+  enabled: true
+  directory: "logs"
+  format: "yyyy-MM-dd_HH-mm-ss"
+  include:
+    chat: true
+    commands: true
+    errors: true
+    model_changes: true
+    temperature_changes: true
+
+# 聊天设置
+chat:
+  # 触发词设置
+  trigger: "ai"
+  trigger_words:
+    - "ai"
+    - "@ai"
+    - "!ai"
+  # 消息格式
+  format:
+    thinking: "§7[AI] §f正在思考中..."
+    response: "§7[AI] §f%s"
+    error: "§c[AI] 发生错误：%s"
+    empty_question: "§c[AI] 请输入你的问题"
+    cooldown: "§c[AI] 请等待 %d 秒后再次提问"
+    no_permission: "§c[AI] 你没有权限使用此功能"
+    model_switch_success: "§a[AI] 已切换到模型: %s"
+    model_switch_fail: "§c[AI] 切换模型失败: %s"
+    temperature_set: "§a[AI] 已将温度设置为: %.2f"
+    persona_switch: "§a[AI] 已切换到人设: %s"
+    persona_list: "§a[AI] 可用的人设列表:"
+    persona_not_found: "§c[AI] 找不到指定的人设: %s"
+    history_cleared: "§a[AI] 已清除对话历史"
+    all_history_cleared: "§a[AI] 已清除所有玩家的对话历史"
+  # 冷却时间 (毫秒)
+  cooldown: 10000
+  # 历史记录长度限制
+  max_history: 10
+  # 广播设置
+  broadcast:
+    enabled: true
+    to_players: true
+    to_console: true
+    format:
+      question: "§8[AI] §7{player} §f问: §7{message}"
+      answer: "§8[AI] §7回答 §f{player}: §7{message}"
+    ignore_personas:
+      - "private"
+      - "secret"
+
+# 人设配置
+personas:
+  default:
+    name: "默认助手"
+    description: "一个友好的AI助手"
+    context: "你是一个友好的AI助手，会用简短的语言回答问题。"
+  minecraft:
+    name: "MC专家"
+    description: "Minecraft游戏专家"
+    context: "你是一个Minecraft游戏专家，精通红石、建筑和游戏机制，会用简短的语言回答问题。"
+  rpg:
+    name: "RPG角色"
+    description: "角色扮演游戏中的NPC"
+    context: "你是一个生活在中世纪魔法世界的NPC，说话时要符合角色设定，用简短的语言回答问题。"
+
+# 敏感词过滤
+filter:
+  enabled: true
+  words:
+    - "敏感词1"
+    - "敏感词2"
+  replacement: "***"
+
+# 命令设置
+commands:
+  # 中文命令
+  chinese:
+    clear_memory: ["清除记忆", "清空记忆", "忘记对话"]
+    switch_persona: ["切换人设", "换个角色", "更换人设"]
+    list_personas: ["查看人设", "人设列表", "所有角色"]
+    help: ["帮助", "指令", "命令"] 
