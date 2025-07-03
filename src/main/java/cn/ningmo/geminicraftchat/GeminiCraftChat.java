@@ -6,6 +6,7 @@ import cn.ningmo.geminicraftchat.commands.MainCommand;
 import cn.ningmo.geminicraftchat.listeners.ChatListener;
 import cn.ningmo.geminicraftchat.chat.ChatManager;
 import cn.ningmo.geminicraftchat.logging.LogManager;
+import cn.ningmo.geminicraftchat.metrics.MetricsManager;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +16,7 @@ public class GeminiCraftChat extends JavaPlugin {
     private ConfigManager configManager;
     private ChatManager chatManager;
     private LogManager logManager;
+    private MetricsManager metricsManager;
     private Logger pluginLogger;
 
     @Override
@@ -106,7 +108,16 @@ public class GeminiCraftChat extends JavaPlugin {
             int filterWordCount = configManager.getFilterWords().size();
             pluginLogger.info("敏感词过滤已启用，共 " + filterWordCount + " 个敏感词");
         }
-        
+
+        // 初始化bStats统计
+        try {
+            this.metricsManager = new MetricsManager(this);
+            this.metricsManager.initializeMetrics();
+            pluginLogger.info("bStats统计初始化成功");
+        } catch (Exception e) {
+            pluginLogger.warning("bStats统计初始化失败: " + e.getMessage());
+        }
+
         pluginLogger.info("GeminiCraftChat v" + getDescription().getVersion() + " 插件已成功启动!");
     }
 
@@ -120,6 +131,11 @@ public class GeminiCraftChat extends JavaPlugin {
         // 关闭日志管理器
         if (logManager != null) {
             logManager.closeLog();
+        }
+
+        // 关闭统计管理器
+        if (metricsManager != null) {
+            metricsManager.shutdown();
         }
 
         pluginLogger.info("GeminiCraftChat 插件已停用");
@@ -171,6 +187,10 @@ public class GeminiCraftChat extends JavaPlugin {
 
     public LogManager getLogManager() {
         return logManager;
+    }
+
+    public MetricsManager getMetricsManager() {
+        return metricsManager;
     }
 
     public void log(Level level, String message) {

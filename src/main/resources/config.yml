@@ -9,6 +9,12 @@
 # 调试模式
 debug: true
 
+# bStats 统计设置
+# bStats 收集匿名使用统计数据以帮助改进插件
+# 详情请访问: https://bstats.org/plugin/bukkit/GeminiCraftChat/26354
+bstats:
+  enabled: true  # 是否启用 bStats 统计（推荐保持启用以支持插件开发）
+
 # API 设置
 api:
   # 可用的模型列表 - 完全可配置的API接口

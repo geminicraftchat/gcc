@@ -19,6 +19,7 @@ A powerful Minecraft AI chat plugin supporting multiple AI models with advanced 
 - **Real-time Switching** - Change models and settings on-the-fly
 - **Chat History** - Persistent conversation memory
 - **Proxy Support** - HTTP/SOCKS proxy compatibility
+- **bStats Analytics** - Anonymous usage statistics to improve plugin development
 
 ## 🚀 Quick Start
 
@@ -153,6 +154,30 @@ logging:
     api_calls: true
     model_changes: true
 ```
+
+### bStats Configuration
+```yaml
+# bStats Analytics Settings
+# bStats collects anonymous usage statistics to help improve the plugin
+# Visit: https://bstats.org/plugin/bukkit/GeminiCraftChat/26354
+bstats:
+  enabled: true  # Enable bStats analytics (recommended to support plugin development)
+```
+
+**What data is collected?**
+- Server software type (Paper, Spigot, etc.)
+- Java version
+- Number of configured APIs
+- Enabled features (long thinking, proxy, filtering)
+- Anonymous usage statistics
+
+**Privacy**: All data is completely anonymous and helps improve the plugin.
+
+## 📈 bStats
+
+[![bStats Graph Data](https://bstats.org/signatures/bukkit/GeminiCraftChat.svg)](https://bstats.org/plugin/bukkit/GeminiCraftChat/26354)
+
+View detailed statistics and charts on our [bStats page](https://bstats.org/plugin/bukkit/GeminiCraftChat/26354)
 
 ## 🧠 Long Thinking Mode
 
