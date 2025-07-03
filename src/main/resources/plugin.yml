@@ -1,0 +1,31 @@
+name: GeminiCraftChat
+version: 1.0.7
+main: cn.ningmo.geminicraftchat.GeminiCraftChat
+api-version: '1.13'
+authors: [ningmo]
+description: 将Gemini的聊天系统带入Minecraft
+commands:
+  gcc:
+    description: GeminiCraftChat主命令
+    usage: /gcc [reload|clear|model|temp|persona|debug]
+    aliases: [geminicraftchat]
+
+permissions:
+  gcc.use:
+    description: 允许使用基本功能
+    default: true
+  gcc.admin:
+    description: 允许使用管理员功能
+    default: op
+  gcc.model.switch:
+    description: 允许切换AI模型
+    default: op
+  gcc.temperature.adjust:
+    description: 允许调整模型温度
+    default: op
+  gcc.broadcast.receive:
+    description: 允许接收AI对话广播
+    default: true
+  gcc.broadcast.bypass:
+    description: 允许跳过AI对话广播
+    default: op 
