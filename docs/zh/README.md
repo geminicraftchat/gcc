@@ -475,6 +475,7 @@ chat:
 - **GitHub Releases**：[下载最新版本](https://github.com/geminicraftchat/gcc/releases)
 - **文档**：[完整文档](../README.md)
 - **语言切换**：[English](../en/README.md) | [中文](README.md)
+- **QQ群聊**: 974782827
 
 ---
 
