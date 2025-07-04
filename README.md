@@ -219,7 +219,7 @@ A:
 - **GitHub Issues**：[报告错误或请求功能](https://github.com/geminicraftchat/gcc/issues)
 - **GitHub Releases**：[下载最新版本](https://github.com/geminicraftchat/gcc/releases)
 - **完整文档**：[English](docs/en/README.md) | [中文](docs/zh/README.md)
-- **QQ群聊**:974782827
+- **QQ群聊**: 974782827
 ---
 
 **与AI愉快聊天！🤖✨**
