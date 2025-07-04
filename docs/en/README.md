@@ -1,5 +1,10 @@
 # GeminiCraftChat
 
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
+[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.java.net/projects/jdk/21/)
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.21.3-brightgreen.svg)](https://www.minecraft.net/)
+[![bStats](https://img.shields.io/badge/bStats-26354-blue.svg)](https://bstats.org/plugin/bukkit/GeminiCraftChat/26354)
+
 A powerful Minecraft AI chat plugin supporting multiple AI models with advanced features.
 
 ## 🌟 Features
@@ -389,9 +394,19 @@ We welcome contributions! Please:
 
 This project is licensed under the MIT License - see the [LICENSE](../../LICENSE) file for details.
 
+### MIT License Summary
+- ✅ **Commercial Use** - Use in commercial projects
+- ✅ **Modification** - Modify and create derivative works
+- ✅ **Distribution** - Distribute original or modified versions
+- ✅ **Private Use** - Use for private/personal projects
+- ⚠️ **Liability** - No warranty or liability
+- ⚠️ **Attribution** - Must include copyright notice
+
+**Copyright (c) 2024 GeminiCraftChat Contributors**
+
 ## 🆘 Support
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/ning-g-mo/gcc/issues)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/geminicraftchat/gcc/issues)
 - **Discord**: Coming soon
 - **Documentation**: [Full documentation](../README.md)
 
