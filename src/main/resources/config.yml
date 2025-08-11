@@ -74,7 +74,7 @@ npc:
       personality: "friendly_guide"  # 使用的人设
       api_model: "api1"  # 使用的API模型
       spawn_location:
-        world: "world"
+        world: "ad-ThirdSeason"
         x: 0.0
         y: 64.0
         z: 0.0
@@ -121,7 +121,7 @@ npc:
       personality: "mysterious_mage"
       api_model: "api2"
       spawn_location:
-        world: "world"
+        world: "ad-ThirdSeason"
         x: 100.0
         y: 64.0
         z: 100.0

@@ -47,9 +47,13 @@ public class NPCManager implements NpcService {
         }
         
         this.enabled = true;
+
+        // 验证配置
+        validateConfiguration();
+
         loadNPCsFromConfig();
         startAIUpdateTask();
-        
+
         plugin.getLogger().info("NPC管理器已初始化，加载了 " + npcs.size() + " 个NPC");
     }
     
@@ -76,6 +80,34 @@ public class NPCManager implements NpcService {
         plugin.getLogger().info("NPC管理器已关闭");
     }
     
+    /**
+     * 验证配置
+     */
+    private void validateConfiguration() {
+        plugin.getLogger().info("验证NPC配置...");
+
+        // 显示可用世界
+        List<String> worldNames = Bukkit.getWorlds().stream()
+            .map(World::getName)
+            .collect(java.util.stream.Collectors.toList());
+        plugin.getLogger().info("服务器可用世界: " + String.join(", ", worldNames));
+
+        // 检查NPC配置中的世界
+        ConfigurationSection npcSection = configManager.getConfig().getConfigurationSection("npc.npcs");
+        if (npcSection != null) {
+            for (String npcId : npcSection.getKeys(false)) {
+                ConfigurationSection npcConfig = npcSection.getConfigurationSection(npcId);
+                if (npcConfig != null) {
+                    String worldName = npcConfig.getString("spawn_location.world");
+                    if (worldName != null && !worldNames.contains(worldName)) {
+                        plugin.getLogger().warning("NPC " + npcId + " 配置的世界 '" + worldName + "' 不存在！");
+                        plugin.getLogger().warning("请将其修改为以下世界之一: " + String.join(", ", worldNames));
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * 从配置文件加载NPC
      */
@@ -120,7 +152,11 @@ public class NPCManager implements NpcService {
         
         World world = Bukkit.getWorld(worldName);
         if (world == null) {
-            plugin.getLogger().warning("世界 " + worldName + " 不存在，跳过NPC " + npcId);
+            plugin.getLogger().warning("世界 '" + worldName + "' 不存在，跳过NPC " + npcId);
+            plugin.getLogger().info("可用世界列表: " + Bukkit.getWorlds().stream()
+                .map(World::getName)
+                .collect(java.util.stream.Collectors.joining(", ")));
+            plugin.getLogger().info("请在config.yml中将NPC " + npcId + " 的世界名称修改为正确的世界名");
             return null;
         }
         
