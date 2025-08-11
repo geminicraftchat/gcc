@@ -32,7 +32,7 @@ public class NPCListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        if (!npcManager.isEnabled()) return;
+        if (npcManager == null || !npcManager.isEnabled()) return;
         
         Entity entity = event.getRightClicked();
         Player player = event.getPlayer();
@@ -71,7 +71,7 @@ public class NPCListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityDamage(EntityDamageEvent event) {
-        if (!npcManager.isEnabled()) return;
+        if (npcManager == null || !npcManager.isEnabled()) return;
         
         Entity entity = event.getEntity();
         AIControlledNPC npc = npcManager.getNPCByEntity(entity.getUniqueId());
@@ -109,7 +109,7 @@ public class NPCListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityDeath(EntityDeathEvent event) {
-        if (!npcManager.isEnabled()) return;
+        if (npcManager == null || !npcManager.isEnabled()) return;
         
         Entity entity = event.getEntity();
         AIControlledNPC npc = npcManager.getNPCByEntity(entity.getUniqueId());

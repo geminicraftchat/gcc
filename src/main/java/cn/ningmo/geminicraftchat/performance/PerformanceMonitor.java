@@ -174,8 +174,11 @@ public class PerformanceMonitor {
                 optimizeForHighCPU();
             }
             
-            // 内存使用过高
-            if (report.getMemoryUsage() > memoryThreshold) {
+            // 内存使用过高（检查使用率而不是绝对值）
+            if (report.getMemoryUsagePercent() > 85.0) {
+                plugin.getLogger().warning("内存使用率过高 (" + String.format("%.1f", report.getMemoryUsagePercent()) + "%)，启动自动调优");
+                optimizeForHighMemory();
+            } else if (report.getMemoryUsage() > memoryThreshold) {
                 plugin.getLogger().warning("内存使用过高 (" + formatBytes(report.getMemoryUsage()) + ")，启动自动调优");
                 optimizeForHighMemory();
             }
@@ -213,13 +216,19 @@ public class PerformanceMonitor {
     private void optimizeForHighMemory() {
         // 清理缓存
         plugin.getLogger().info("自动调优: 清理内存缓存");
-        
-        // 强制垃圾回收
-        System.gc();
-        
-        // 建议重启
-        if (currentMemoryUsage.get() > memoryThreshold * 2) {
-            plugin.getLogger().severe("内存使用严重过高，建议重启服务器");
+
+        // 触发垃圾回收（可配置）
+        if (plugin.getConfigManager().getConfig().getBoolean("performance.allow_explicit_gc", false)) {
+            System.gc();
+        }
+
+        // 检查内存使用率而不是绝对值
+        long maxMemory = memoryBean.getHeapMemoryUsage().getMax();
+        double memoryUsagePercent = maxMemory > 0 ? (double) currentMemoryUsage.get() / maxMemory * 100 : 0;
+
+        // 只有在内存使用率真正过高时才建议重启
+        if (memoryUsagePercent > 95.0) {
+            plugin.getLogger().severe("内存使用率严重过高 (" + String.format("%.1f", memoryUsagePercent) + "%)，建议重启服务器");
         }
     }
     

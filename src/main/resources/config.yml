@@ -38,7 +38,7 @@ performance:
   auto_performance_tuning: true    # 启用自动性能调优
   monitor_interval: 30000          # 性能监控间隔（毫秒，30秒）
   cpu_threshold: 80.0              # CPU使用率阈值（%）
-  memory_threshold: 100000000      # 内存使用阈值（字节，100MB）
+  memory_threshold: 2000000000     # 内存使用阈值（字节，2GB）
   allow_explicit_gc: false         # 是否允许手动触发GC（默认关闭）
 
   # 自动扩缩容
