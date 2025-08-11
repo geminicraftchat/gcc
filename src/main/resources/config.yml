@@ -15,6 +15,153 @@ debug: true
 bstats:
   enabled: true  # 是否启用 bStats 统计（推荐保持启用以支持插件开发）
 
+# 性能优化设置
+performance:
+  # 异步日志配置
+  async_logging: true           # 启用异步日志系统
+  log_queue_size: 10000        # 日志队列大小
+  log_batch_size: 50           # 日志批处理大小
+  log_flush_interval: 1000     # 日志刷新间隔（毫秒）
+
+  # NPC性能配置
+  smart_npc_enabled: true      # 启用智能NPC管理器
+  max_active_npcs: 20          # 最大活跃NPC数量
+  npc_update_batch_size: 5     # NPC批处理大小
+  max_concurrent_ai_requests: 10  # 最大并发AI请求数
+
+  # 内存管理
+  memory_cleanup_interval: 300000  # 内存清理间隔（毫秒，5分钟）
+  conversation_cache_size: 1000    # 对话缓存大小
+  conversation_expire_time: 1800   # 对话过期时间（秒，30分钟）
+
+  # 自动性能调优
+  auto_performance_tuning: true    # 启用自动性能调优
+  monitor_interval: 30000          # 性能监控间隔（毫秒，30秒）
+  cpu_threshold: 80.0              # CPU使用率阈值（%）
+  memory_threshold: 100000000      # 内存使用阈值（字节，100MB）
+  allow_explicit_gc: false         # 是否允许手动触发GC（默认关闭）
+
+  # 自动扩缩容
+  auto_scaling:
+    enabled: true                  # 启用自动扩缩容
+    scale_down_delay: 30           # 缩容延迟（秒）
+    min_update_interval: 20        # 最小更新间隔（tick）
+    max_update_interval: 200       # 最大更新间隔（tick）
+
+# NPC 系统设置
+npc:
+  enabled: true  # 是否启用NPC功能
+  ai_update_interval: 20  # AI更新间隔（tick，20 = 1秒）
+  nearby_range: 20.0  # 附近NPC查询范围
+  broadcast_death: false  # 是否广播NPC死亡消息
+
+  # 智能调度配置
+  update_interval_active: 20    # 活跃NPC更新间隔（tick，1秒）
+  update_interval_inactive: 100 # 非活跃NPC更新间隔（tick，5秒）
+  cleanup_interval: 6000        # 清理间隔（tick，5分钟）
+
+  # 性能限制
+  max_npcs_per_world: 10        # 每个世界最大NPC数量
+  max_decision_time: 5000       # 最大AI决策时间（毫秒）
+  batch_processing: true        # 启用批处理
+
+  # NPC配置
+  npcs:
+    # 示例NPC - 智能村民
+    village_guide:
+      display_name: "§6村庄向导"
+      entity_type: "VILLAGER"
+      personality: "friendly_guide"  # 使用的人设
+      api_model: "api1"  # 使用的API模型
+      spawn_location:
+        world: "world"
+        x: 0.0
+        y: 64.0
+        z: 0.0
+        yaw: 0.0
+        pitch: 0.0
+      behavior:
+        max_wander_distance: 15.0  # 最大游荡距离
+        interaction_range: 5.0     # 交互范围
+        movement_speed: 0.25       # 移动速度
+        decision_interval: 5000    # 决策间隔（毫秒）
+        max_conversation_history: 8  # 最大对话历史记录
+        can_fly: false
+        can_swim: true
+        can_climb: false
+        is_aggressive: false
+        can_teleport: false
+        max_health: 20
+        invulnerable: true  # 无敌模式
+        respawn_delay: 30000  # 重生延迟（毫秒）
+        persistent_memory: true  # 持久记忆
+        active_at_night: true
+        active_at_day: true
+        sleep_at_night: false
+        friendly_to_players: true
+        can_follow_players: true
+        follow_distance: 3.0
+        max_follow_time: 300000  # 最大跟随时间（毫秒）
+        behavior_weights:
+          idle: 1.0
+          wander: 1.2
+          follow: 1.5
+          flee: 0.3
+          explore: 0.8
+        avoided_blocks:
+          - "LAVA"
+          - "FIRE"
+          - "CACTUS"
+        allowed_biomes: []  # 空列表表示允许所有生物群系
+
+    # 示例NPC - 神秘法师
+    mysterious_mage:
+      display_name: "§5神秘法师"
+      entity_type: "WITCH"
+      personality: "mysterious_mage"
+      api_model: "api2"
+      spawn_location:
+        world: "world"
+        x: 100.0
+        y: 64.0
+        z: 100.0
+        yaw: 180.0
+        pitch: 0.0
+      behavior:
+        max_wander_distance: 25.0
+        interaction_range: 6.0
+        movement_speed: 0.2
+        decision_interval: 4000
+        max_conversation_history: 12
+        can_fly: false
+        can_swim: true
+        can_climb: false
+        is_aggressive: false
+        can_teleport: true  # 法师可以传送
+        max_health: 30
+        invulnerable: false
+        respawn_delay: 60000
+        persistent_memory: true
+        active_at_night: true
+        active_at_day: false  # 只在夜晚活跃
+        sleep_at_night: false
+        friendly_to_players: true
+        can_follow_players: false  # 不跟随玩家
+        follow_distance: 0.0
+        max_follow_time: 0
+        behavior_weights:
+          idle: 1.5
+          wander: 0.8
+          follow: 0.0
+          flee: 0.8
+          explore: 1.2
+        avoided_blocks:
+          - "WATER"
+          - "LAVA"
+        allowed_biomes:
+          - "DARK_FOREST"
+          - "SWAMP"
+
 # API 设置
 api:
   # 可用的模型列表 - 完全可配置的API接口
@@ -294,6 +441,27 @@ personas:
     name: "RPG角色"
     description: "角色扮演游戏中的NPC"
     context: "你是一个生活在中世纪魔法世界的NPC，说话时要符合角色设定，用简短的语言回答问题。"
+
+  # NPC专用人设
+  friendly_guide:
+    name: "友好向导"
+    description: "村庄的友好向导NPC"
+    context: "你是一个友好的村庄向导，熟悉这个世界的各种信息。你会热情地帮助玩家，介绍村庄的设施、给出建议，并分享一些有趣的故事。你性格开朗，喜欢与人交流，总是乐于助人。你会根据时间和天气调整自己的行为和对话。"
+
+  mysterious_mage:
+    name: "神秘法师"
+    description: "神秘的魔法师NPC"
+    context: "你是一个神秘的法师，拥有古老的智慧和魔法知识。你说话时带有一种神秘感，经常使用比喻和暗示。你对魔法、炼金术和古老的传说很了解，但不会轻易透露所有秘密。你更喜欢在夜晚活动，对黑暗和神秘的事物感兴趣。你会根据玩家的行为决定是否信任他们。"
+
+  guard_captain:
+    name: "守卫队长"
+    description: "严肃的守卫队长NPC"
+    context: "你是一名经验丰富的守卫队长，负责保护村庄的安全。你说话直接、严肃，但内心善良。你对安全和秩序很重视，会警告玩家注意危险，也会分享一些战斗和生存的经验。你尊重勇敢和正义的行为，但对可疑的活动保持警惕。"
+
+  merchant_trader:
+    name: "商人"
+    description: "精明的商人NPC"
+    context: "你是一个精明的商人，对贸易和商业很有经验。你善于交际，总是在寻找商机。你会向玩家介绍各种商品和交易机会，分享市场信息和价格趋势。你友好但精明，总是试图达成对双方都有利的交易。你对财富和商业机会很敏感。"
 
 # 敏感词过滤
 filter:

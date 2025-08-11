@@ -1,5 +1,5 @@
 name: GeminiCraftChat
-version: 1.0.7
+version: 1.0.8
 main: cn.ningmo.geminicraftchat.GeminiCraftChat
 api-version: '1.13'
 authors: [ningmo]
@@ -7,7 +7,15 @@ description: 将Gemini的聊天系统带入Minecraft
 commands:
   gcc:
     description: GeminiCraftChat主命令
-    usage: /gcc [reload|clear|model|temp|persona|debug]
+    usage: |
+      /gcc <子命令>
+      子命令:
+        reload - 重新加载配置
+        debug - 切换调试模式
+        persona <list|set|info> - 人设管理
+        logs <stats|reset|export> - 日志管理
+        timeout <list|info|toggle> - 超时管理
+        npc <list|info|chat|nearby|spawn|remove|reload> - NPC管理
     aliases: [geminicraftchat]
 
 permissions:
@@ -28,4 +36,19 @@ permissions:
     default: true
   gcc.broadcast.bypass:
     description: 允许跳过AI对话广播
-    default: op 
+    default: op
+  gcc.npc.interact:
+    description: 允许与NPC交互
+    default: true
+  gcc.npc.chat:
+    description: 允许与NPC对话
+    default: true
+  gcc.npc.nearby:
+    description: 允许查看附近的NPC
+    default: true
+  gcc.npc.manage:
+    description: 允许管理NPC（生成、移除、重载）
+    default: op
+  gcc.npc.damage:
+    description: 允许伤害NPC
+    default: op

@@ -4,7 +4,11 @@ import cn.ningmo.geminicraftchat.GeminiCraftChat;
 import cn.ningmo.geminicraftchat.chat.ChatManager;
 import cn.ningmo.geminicraftchat.config.ConfigManager;
 import cn.ningmo.geminicraftchat.logging.LogManager;
+import cn.ningmo.geminicraftchat.npc.NPCManager;
+import cn.ningmo.geminicraftchat.npc.NpcService;
+import cn.ningmo.geminicraftchat.npc.AIControlledNPC;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,12 +22,14 @@ public class MainCommand implements CommandExecutor {
     private final ChatManager chatManager;
     private final ConfigManager configManager;
     private final LogManager logManager;
+    private final NpcService npcManager;
 
     public MainCommand(GeminiCraftChat plugin) {
         this.plugin = plugin;
         this.chatManager = plugin.getChatManager();
         this.configManager = plugin.getConfigManager();
         this.logManager = plugin.getLogManager();
+        this.npcManager = plugin.getNpcService();
     }
 
     @Override
@@ -74,6 +80,10 @@ public class MainCommand implements CommandExecutor {
 
             case "timeout":
                 handleTimeout(sender, args);
+                break;
+
+            case "npc":
+                handleNPC(sender, args);
                 break;
 
             default:
@@ -481,10 +491,286 @@ public class MainCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.YELLOW + "/gcc timeout list " + ChatColor.GRAY + "- 查看所有模型的超时设置");
             sender.sendMessage(ChatColor.YELLOW + "/gcc timeout info <模型> " + ChatColor.GRAY + "- 查看指定模型的详细超时信息");
             sender.sendMessage(ChatColor.YELLOW + "/gcc timeout toggle <模型> " + ChatColor.GRAY + "- 切换模型的长思考模式");
+            sender.sendMessage(ChatColor.YELLOW + "/gcc npc list " + ChatColor.GRAY + "- 查看所有NPC");
+            sender.sendMessage(ChatColor.YELLOW + "/gcc npc info <NPC ID> " + ChatColor.GRAY + "- 查看NPC详细信息");
+            sender.sendMessage(ChatColor.YELLOW + "/gcc npc spawn <NPC ID> " + ChatColor.GRAY + "- 重新生成NPC");
+            sender.sendMessage(ChatColor.YELLOW + "/gcc npc remove <NPC ID> " + ChatColor.GRAY + "- 移除NPC");
+            sender.sendMessage(ChatColor.YELLOW + "/gcc npc reload " + ChatColor.GRAY + "- 重新加载NPC配置");
+        }
+
+        // NPC相关命令（普通玩家也可以使用部分）
+        if (npcManager.isEnabled()) {
+            sender.sendMessage(ChatColor.YELLOW + "/gcc npc chat <NPC ID> <消息> " + ChatColor.GRAY + "- 与NPC对话");
+            sender.sendMessage(ChatColor.YELLOW + "/gcc npc nearby " + ChatColor.GRAY + "- 查看附近的NPC");
         }
 
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.GRAY + "注意：控制台拥有所有管理员权限");
         }
     }
-} 
+
+    /**
+     * 处理NPC相关命令
+     */
+    private void handleNPC(CommandSender sender, String[] args) {
+        if (!npcManager.isEnabled()) {
+            sender.sendMessage(ChatColor.RED + "NPC功能已禁用！");
+            return;
+        }
+
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "用法: /gcc npc <子命令>");
+            sender.sendMessage(ChatColor.YELLOW + "可用子命令: list, info, chat, nearby, spawn, remove, reload");
+            return;
+        }
+
+        String subCommand = args[1].toLowerCase();
+        String senderName = sender instanceof Player ? sender.getName() : "CONSOLE";
+
+        switch (subCommand) {
+            case "list":
+                handleNPCList(sender);
+                break;
+
+            case "info":
+                if (args.length < 3) {
+                    sender.sendMessage(ChatColor.RED + "用法: /gcc npc info <NPC ID>");
+                    return;
+                }
+                handleNPCInfo(sender, args[2]);
+                break;
+
+            case "chat":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.RED + "只有玩家可以与NPC对话！");
+                    return;
+                }
+                if (args.length < 4) {
+                    sender.sendMessage(ChatColor.RED + "用法: /gcc npc chat <NPC ID> <消息>");
+                    return;
+                }
+                String message = String.join(" ", java.util.Arrays.copyOfRange(args, 3, args.length));
+                handleNPCChat((Player) sender, args[2], message);
+                break;
+
+            case "nearby":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.RED + "只有玩家可以查看附近的NPC！");
+                    return;
+                }
+                handleNPCNearby((Player) sender);
+                break;
+
+            case "spawn":
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    if (!player.hasPermission(configManager.getPermission("admin"))) {
+                        sender.sendMessage(ChatColor.RED + "你没有权限执行此命令！");
+                        return;
+                    }
+                }
+                if (args.length < 3) {
+                    sender.sendMessage(ChatColor.RED + "用法: /gcc npc spawn <NPC ID>");
+                    return;
+                }
+                handleNPCSpawn(sender, args[2]);
+                break;
+
+            case "remove":
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    if (!player.hasPermission(configManager.getPermission("admin"))) {
+                        sender.sendMessage(ChatColor.RED + "你没有权限执行此命令！");
+                        return;
+                    }
+                }
+                if (args.length < 3) {
+                    sender.sendMessage(ChatColor.RED + "用法: /gcc npc remove <NPC ID>");
+                    return;
+                }
+                handleNPCRemove(sender, args[2]);
+                break;
+
+            case "reload":
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    if (!player.hasPermission(configManager.getPermission("admin"))) {
+                        sender.sendMessage(ChatColor.RED + "你没有权限执行此命令！");
+                        return;
+                    }
+                }
+                handleNPCReload(sender);
+                break;
+
+            default:
+                sender.sendMessage(ChatColor.RED + "未知的NPC子命令: " + subCommand);
+                sender.sendMessage(ChatColor.YELLOW + "可用子命令: list, info, chat, nearby, spawn, remove, reload");
+                break;
+        }
+
+        logManager.logCommand(senderName, "npc " + subCommand);
+    }
+
+    /**
+     * 处理NPC列表命令
+     */
+    private void handleNPCList(CommandSender sender) {
+        Map<String, AIControlledNPC> npcs = npcManager.getNPCs();
+
+        if (npcs.isEmpty()) {
+            sender.sendMessage(ChatColor.YELLOW + "当前没有活跃的NPC");
+            return;
+        }
+
+        sender.sendMessage(ChatColor.GREEN + "=== NPC列表 ===");
+        for (AIControlledNPC npc : npcs.values()) {
+            String status = npc.isActive() ? ChatColor.GREEN + "活跃" : ChatColor.RED + "非活跃";
+            String location = String.format("%.1f, %.1f, %.1f",
+                npc.getCurrentLocation().getX(),
+                npc.getCurrentLocation().getY(),
+                npc.getCurrentLocation().getZ());
+
+            sender.sendMessage(String.format("%s%s %s- %s%s %s在 %s%s",
+                ChatColor.YELLOW, npc.getNpcId(),
+                ChatColor.GRAY, ChatColor.WHITE, npc.getDisplayName(),
+                status, ChatColor.GRAY, location));
+        }
+    }
+
+    /**
+     * 处理NPC信息命令
+     */
+    private void handleNPCInfo(CommandSender sender, String npcId) {
+        AIControlledNPC npc = npcManager.getNPC(npcId);
+        if (npc == null) {
+            sender.sendMessage(ChatColor.RED + "未找到NPC: " + npcId);
+            return;
+        }
+
+        sender.sendMessage(ChatColor.GREEN + "=== NPC信息: " + npc.getDisplayName() + " ===");
+        sender.sendMessage(ChatColor.YELLOW + "ID: " + ChatColor.WHITE + npc.getNpcId());
+        sender.sendMessage(ChatColor.YELLOW + "显示名称: " + ChatColor.WHITE + npc.getDisplayName());
+        sender.sendMessage(ChatColor.YELLOW + "实体类型: " + ChatColor.WHITE + npc.getEntityType().name());
+        sender.sendMessage(ChatColor.YELLOW + "人设: " + ChatColor.WHITE + npc.getPersonality());
+        sender.sendMessage(ChatColor.YELLOW + "API模型: " + ChatColor.WHITE + npc.getApiModel());
+        sender.sendMessage(ChatColor.YELLOW + "当前状态: " + ChatColor.WHITE + npc.getCurrentState().name());
+        sender.sendMessage(ChatColor.YELLOW + "是否活跃: " + (npc.isActive() ? ChatColor.GREEN + "是" : ChatColor.RED + "否"));
+
+        if (npc.getEntity() != null) {
+            Location loc = npc.getCurrentLocation();
+            sender.sendMessage(ChatColor.YELLOW + "当前位置: " + ChatColor.WHITE +
+                String.format("%.1f, %.1f, %.1f (%s)", loc.getX(), loc.getY(), loc.getZ(), loc.getWorld().getName()));
+        }
+
+        if (npc.getCurrentTarget() != null) {
+            sender.sendMessage(ChatColor.YELLOW + "当前目标: " + ChatColor.WHITE + npc.getCurrentTarget().getName());
+        }
+    }
+
+    /**
+     * 处理NPC对话命令
+     */
+    private void handleNPCChat(Player player, String npcId, String message) {
+        AIControlledNPC npc = npcManager.getNPC(npcId);
+        if (npc == null) {
+            player.sendMessage(ChatColor.RED + "未找到NPC: " + npcId);
+            return;
+        }
+
+        if (!player.hasPermission("gcc.npc.chat")) {
+            player.sendMessage(ChatColor.RED + "你没有权限与NPC对话！");
+            return;
+        }
+
+        if (!npc.canInteractWith(player)) {
+            player.sendMessage(ChatColor.RED + "你离 " + npc.getDisplayName() + " 太远了！");
+            return;
+        }
+
+        player.sendMessage(ChatColor.GRAY + "你对 " + ChatColor.YELLOW + npc.getDisplayName() + ChatColor.GRAY + " 说: " + ChatColor.WHITE + message);
+        npcManager.handlePlayerChat(player, npc, message);
+    }
+
+    /**
+     * 处理附近NPC命令
+     */
+    private void handleNPCNearby(Player player) {
+        if (!player.hasPermission("gcc.npc.nearby")) {
+            player.sendMessage(ChatColor.RED + "你没有权限查看附近的NPC！");
+            return;
+        }
+
+        double range = configManager.getConfig().getDouble("npc.nearby_range", 20.0);
+        java.util.List<AIControlledNPC> nearbyNPCs = npcManager.getNearbyNPCs(player, range);
+
+        if (nearbyNPCs.isEmpty()) {
+            player.sendMessage(ChatColor.YELLOW + "附近 " + range + " 格范围内没有NPC");
+            return;
+        }
+
+        player.sendMessage(ChatColor.GREEN + "=== 附近的NPC (" + range + "格范围) ===");
+        for (AIControlledNPC npc : nearbyNPCs) {
+            double distance = player.getLocation().distance(npc.getCurrentLocation());
+            String canInteract = npc.canInteractWith(player) ? ChatColor.GREEN + "可交互" : ChatColor.RED + "太远";
+
+            player.sendMessage(String.format("%s%s %s- %s%s %s距离: %.1f格 %s",
+                ChatColor.YELLOW, npc.getNpcId(),
+                ChatColor.GRAY, ChatColor.WHITE, npc.getDisplayName(),
+                ChatColor.GRAY, distance, canInteract));
+        }
+    }
+
+    /**
+     * 处理NPC生成命令
+     */
+    private void handleNPCSpawn(CommandSender sender, String npcId) {
+        AIControlledNPC npc = npcManager.getNPC(npcId);
+        if (npc == null) {
+            sender.sendMessage(ChatColor.RED + "未找到NPC配置: " + npcId);
+            return;
+        }
+
+        if (npc.isActive() && npc.getEntity() != null && !npc.getEntity().isDead()) {
+            sender.sendMessage(ChatColor.YELLOW + "NPC " + npc.getDisplayName() + " 已经存在");
+            return;
+        }
+
+        boolean success = npcManager.spawnNPC(npc);
+        if (success) {
+            sender.sendMessage(ChatColor.GREEN + "成功生成NPC: " + npc.getDisplayName());
+        } else {
+            sender.sendMessage(ChatColor.RED + "生成NPC失败: " + npc.getDisplayName());
+        }
+    }
+
+    /**
+     * 处理NPC移除命令
+     */
+    private void handleNPCRemove(CommandSender sender, String npcId) {
+        AIControlledNPC npc = npcManager.getNPC(npcId);
+        if (npc == null) {
+            sender.sendMessage(ChatColor.RED + "未找到NPC: " + npcId);
+            return;
+        }
+
+        boolean success = npcManager.removeNPC(npcId);
+        if (success) {
+            sender.sendMessage(ChatColor.GREEN + "成功移除NPC: " + npc.getDisplayName());
+        } else {
+            sender.sendMessage(ChatColor.RED + "移除NPC失败: " + npc.getDisplayName());
+        }
+    }
+
+    /**
+     * 处理NPC重新加载命令
+     */
+    private void handleNPCReload(CommandSender sender) {
+        try {
+            npcManager.reloadConfig();
+            sender.sendMessage(ChatColor.GREEN + "NPC配置已重新加载");
+        } catch (Exception e) {
+            sender.sendMessage(ChatColor.RED + "重新加载NPC配置失败: " + e.getMessage());
+            plugin.getLogger().warning("重新加载NPC配置失败: " + e.getMessage());
+        }
+    }
+}

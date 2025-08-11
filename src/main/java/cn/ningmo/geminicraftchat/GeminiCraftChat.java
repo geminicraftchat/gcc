@@ -4,9 +4,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import cn.ningmo.geminicraftchat.config.ConfigManager;
 import cn.ningmo.geminicraftchat.commands.MainCommand;
 import cn.ningmo.geminicraftchat.listeners.ChatListener;
+import cn.ningmo.geminicraftchat.listeners.NPCListener;
 import cn.ningmo.geminicraftchat.chat.ChatManager;
 import cn.ningmo.geminicraftchat.logging.LogManager;
+import cn.ningmo.geminicraftchat.logging.AsyncLogManager;
 import cn.ningmo.geminicraftchat.metrics.MetricsManager;
+import cn.ningmo.geminicraftchat.npc.NPCManager;
+import cn.ningmo.geminicraftchat.npc.NpcService;
+import cn.ningmo.geminicraftchat.npc.SmartNPCManager;
+import cn.ningmo.geminicraftchat.performance.PerformanceMonitor;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +22,12 @@ public class GeminiCraftChat extends JavaPlugin {
     private ConfigManager configManager;
     private ChatManager chatManager;
     private LogManager logManager;
+    private AsyncLogManager asyncLogManager;
     private MetricsManager metricsManager;
+    private NPCManager npcManager;
+    private SmartNPCManager smartNPCManager;
+    private NpcService npcService;
+    private PerformanceMonitor performanceMonitor;
     private Logger pluginLogger;
 
     @Override
@@ -77,6 +88,7 @@ public class GeminiCraftChat extends JavaPlugin {
         // 注册监听器
         try {
             getServer().getPluginManager().registerEvents(new ChatListener(this), this);
+            getServer().getPluginManager().registerEvents(new NPCListener(this), this);
             pluginLogger.info("事件监听器注册成功");
         } catch (Exception e) {
             pluginLogger.severe("事件监听器注册失败: " + e.getMessage());
@@ -109,6 +121,42 @@ public class GeminiCraftChat extends JavaPlugin {
             pluginLogger.info("敏感词过滤已启用，共 " + filterWordCount + " 个敏感词");
         }
 
+        // 初始化异步日志管理器
+        try {
+            this.asyncLogManager = new AsyncLogManager(this);
+            this.asyncLogManager.start();
+            pluginLogger.info("异步日志管理器初始化成功");
+        } catch (Exception e) {
+            pluginLogger.warning("异步日志管理器初始化失败: " + e.getMessage());
+        }
+
+        // 初始化性能监控
+        try {
+            this.performanceMonitor = new PerformanceMonitor(this);
+            this.performanceMonitor.start();
+            pluginLogger.info("性能监控系统初始化成功");
+        } catch (Exception e) {
+            pluginLogger.warning("性能监控系统初始化失败: " + e.getMessage());
+        }
+
+        // 初始化智能NPC管理器
+        try {
+            boolean useSmartNPC = configManager.getConfig().getBoolean("performance.smart_npc_enabled", true);
+            if (useSmartNPC) {
+                this.smartNPCManager = new SmartNPCManager(this);
+                this.smartNPCManager.initialize();
+                this.npcService = smartNPCManager;
+                pluginLogger.info("智能NPC管理器初始化成功");
+            } else {
+                this.npcManager = new NPCManager(this);
+                this.npcManager.initialize();
+                this.npcService = npcManager;
+                pluginLogger.info("传统NPC管理器初始化成功");
+            }
+        } catch (Exception e) {
+            pluginLogger.warning("NPC管理器初始化失败: " + e.getMessage());
+        }
+
         // 初始化bStats统计
         try {
             this.metricsManager = new MetricsManager(this);
@@ -128,9 +176,26 @@ public class GeminiCraftChat extends JavaPlugin {
             chatManager.shutdown();
         }
 
+        // 关闭性能监控
+        if (performanceMonitor != null) {
+            performanceMonitor.stop();
+        }
+
+        // 关闭NPC管理器
+        if (smartNPCManager != null) {
+            smartNPCManager.shutdown();
+        } else if (npcManager != null) {
+            npcManager.shutdown();
+        }
+
         // 关闭日志管理器
         if (logManager != null) {
             logManager.closeLog();
+        }
+
+        // 关闭异步日志管理器
+        if (asyncLogManager != null) {
+            asyncLogManager.stop();
         }
 
         // 关闭统计管理器
@@ -191,6 +256,26 @@ public class GeminiCraftChat extends JavaPlugin {
 
     public MetricsManager getMetricsManager() {
         return metricsManager;
+    }
+
+    public NPCManager getNPCManager() {
+        return npcManager;
+    }
+
+    public SmartNPCManager getSmartNPCManager() {
+        return smartNPCManager;
+    }
+
+    public NpcService getNpcService() {
+        return npcService;
+    }
+
+    public AsyncLogManager getAsyncLogManager() {
+        return asyncLogManager;
+    }
+
+    public PerformanceMonitor getPerformanceMonitor() {
+        return performanceMonitor;
     }
 
     public void log(Level level, String message) {

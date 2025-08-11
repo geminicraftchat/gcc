@@ -50,11 +50,12 @@ public class ChatManager {
         geminiService.sendMessage(playerId, message, persona)
             .thenAccept(response -> {
                 String formattedResponse = String.format(configManager.getResponseFormat(), response);
-                player.sendMessage(formattedResponse);
-                
+                // 切回主线程发消息
+                plugin.getServer().getScheduler().runTask(plugin, () -> player.sendMessage(formattedResponse));
+
                 // 广播回答
                 if (shouldBroadcast(player, persona)) {
-                    broadcastAnswer(player, response);
+                    plugin.getServer().getScheduler().runTask(plugin, () -> broadcastAnswer(player, response));
                 }
             })
             .exceptionally(throwable -> {
