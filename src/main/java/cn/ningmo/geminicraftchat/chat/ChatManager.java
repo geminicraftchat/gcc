@@ -188,6 +188,13 @@ public class ChatManager {
     }
 
     /**
+     * 获取GeminiService实例
+     */
+    public GeminiService getGeminiService() {
+        return geminiService;
+    }
+
+    /**
      * 关闭ChatManager，释放资源
      */
     public void shutdown() {

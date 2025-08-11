@@ -27,6 +27,7 @@ public class AsyncLogManager {
     // 异步处理相关
     private final BlockingQueue<LogEntry> logQueue;
     private final ExecutorService logExecutor;
+    private ScheduledExecutorService flushExecutor;
     private final AtomicBoolean running;
     private final AtomicLong droppedLogs;
     
@@ -202,22 +203,34 @@ public class AsyncLogManager {
     private void startLogProcessor() {
         logExecutor.submit(() -> {
             plugin.getLogger().info("异步日志处理器已启动");
-            
-            while (running.get() || !logQueue.isEmpty()) {
-                try {
-                    processBatch();
-                    Thread.sleep(10); // 短暂休眠避免CPU占用过高
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                } catch (Exception e) {
-                    plugin.getLogger().log(Level.WARNING, "处理日志批次时出错", e);
+
+            try {
+                while (running.get()) {
+                    try {
+                        processBatch();
+                        Thread.sleep(10); // 短暂休眠避免CPU占用过高
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    } catch (Exception e) {
+                        plugin.getLogger().log(Level.WARNING, "处理日志批次时出错", e);
+                    }
                 }
+
+                // 处理剩余的日志
+                while (!logQueue.isEmpty()) {
+                    try {
+                        processBatch();
+                    } catch (Exception e) {
+                        plugin.getLogger().log(Level.WARNING, "处理剩余日志时出错", e);
+                        break;
+                    }
+                }
+            } finally {
+                plugin.getLogger().info("异步日志处理器已停止");
             }
-            
-            plugin.getLogger().info("异步日志处理器已停止");
         });
-        
+
         // 启动定期刷新任务
         startFlushTask();
     }
@@ -228,24 +241,34 @@ public class AsyncLogManager {
     private void processBatch() throws InterruptedException {
         long startTime = System.currentTimeMillis();
         int processed = 0;
-        
-        // 批量处理日志
-        for (int i = 0; i < batchSize; i++) {
-            LogEntry entry = logQueue.poll(100, TimeUnit.MILLISECONDS);
-            if (entry == null) {
-                break;
+
+        // 如果队列为空，等待一段时间
+        if (logQueue.isEmpty()) {
+            LogEntry entry = logQueue.poll(500, TimeUnit.MILLISECONDS);
+            if (entry != null) {
+                writeLogEntry(entry);
+                processed++;
             }
-            
-            writeLogEntry(entry);
-            processed++;
+        } else {
+            // 批量处理日志
+            for (int i = 0; i < batchSize; i++) {
+                LogEntry entry = logQueue.poll();
+                if (entry == null) {
+                    break;
+                }
+
+                writeLogEntry(entry);
+                processed++;
+            }
         }
-        
+
         if (processed > 0) {
             totalLogs.addAndGet(processed);
-            
+
             // 更新平均处理时间
             long processTime = System.currentTimeMillis() - startTime;
-            avgProcessTime.set((avgProcessTime.get() + processTime) / 2);
+            long currentAvg = avgProcessTime.get();
+            avgProcessTime.set(currentAvg == 0 ? processTime : (currentAvg + processTime) / 2);
         }
     }
     
@@ -266,8 +289,6 @@ public class AsyncLogManager {
     /**
      * 启动定期刷新任务
      */
-    private ScheduledExecutorService flushExecutor;
-
     private void startFlushTask() {
         flushExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
             Thread thread = new Thread(r, "GCC-LogFlusher");

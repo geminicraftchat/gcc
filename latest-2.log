@@ -1,0 +1,894 @@
+[09:40:30] [ServerMain/INFO]: [bootstrap] Running Java 21 (Java HotSpot(TM) 64-Bit Server VM 21.0.8+12-LTS-jvmci-23.1-b72; Oracle Corporation Oracle GraalVM 21.0.8+12.1) on Mac OS X 15.4 (aarch64)
+[09:40:30] [ServerMain/INFO]: [bootstrap] Loading Leaves 1.21.8-91-master@956f022 (2025-08-08T12:17:27Z) for Minecraft 1.21.8
+[09:40:31] [ServerMain/INFO]: [PluginInitializerManager] Initializing plugins...
+[09:40:32] [ServerMain/INFO]: [FileProviderSource] The spark plugin will not be loaded as this server bundles the spark profiler.
+[09:40:32] [ServerMain/INFO]: [PluginInitializerManager] Initialized 34 plugins
+[09:40:32] [ServerMain/INFO]: [PluginInitializerManager] Paper plugins (3):
+ - EconomyShopGUI (6.14.4), HuskHomes (4.9.9), ISeeYou (1.3.9)
+[09:40:32] [ServerMain/INFO]: [PluginInitializerManager] Bukkit plugins (31):
+ - AdvancedBanX (3.1.0), CMILib (1.5.6.2), Chunky (1.4.40), ChunkyBorder (1.2.23), Dominion (4.5.0-beta), ESU (0.8.1), EasyBot (2.0.7), EvenMoreFish (2.0.9), FarmControl (1.3.0), FastAsyncWorldEdit (2.13.2-SNAPSHOT-1157;4165498), FlyPlus (3.4.1), GeminiCraftChat (1.0.8), Geyser-Spigot (2.8.3-SNAPSHOT), GeyserExtras (2.0.0), Hurricane (2.1-SNAPSHOT), HuskHomesForm (1.0.4), InvSeePlusPlus (0.30.7), LiteSignIn (1.8.7.0), LuckBedrock (1.1), LuckPerms (5.5.10), Matrix (7.16.2), MiniMOTD (2.1.8), PlaceholderAPI (2.11.6), ProtocolLib (5.4.0), QuickShop-Hikari (6.2.0.10), QuickShopForm (2.1.5), TAB (5.2.5), Vault (1.7.3-b131), XConomy (2.26.3), floodgate (2.2.4-SNAPSHOT (b118-40d320a)), packetevents (2.9.5+24bf010d9-SNAPSHOT)
+[09:40:35] [ServerMain/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[09:40:36] [ServerMain/INFO]: Loaded 1407 recipes
+[09:40:36] [ServerMain/INFO]: Loaded 1520 advancements
+[09:40:36] [ServerMain/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Initialising converters for DataConverter...
+[09:40:36] [ServerMain/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Finished initialising converters for DataConverter in 248.9ms
+[09:40:36] [Server thread/INFO]: Starting minecraft server version 1.21.8
+[09:40:36] [Server thread/INFO]: Loading properties
+[09:40:36] [Server thread/INFO]: This server is running Leaves version 1.21.8-91-master@956f022 (2025-08-08T12:17:27Z) (Implementing API version 1.21.8-R0.1-SNAPSHOT)
+[09:40:36] [Server thread/INFO]: [spark] This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling
+[09:40:36] [Server thread/INFO]: Server Ping Player Sample Count: 12
+[09:40:36] [Server thread/INFO]: Using 4 threads for Netty based IO
+[09:40:37] [Server thread/INFO]: [MoonriseCommon] Leaves is using 2 worker threads, 1 I/O threads
+[09:40:37] [Server thread/INFO]: [ChunkTaskScheduler] Chunk system is using population gen parallelism: true
+[09:40:37] [Server thread/ERROR]: [MapSerializer] Could not deserialize key grass into class net.minecraft.world.item.Item at [entities, spawning, alt-item-despawn-rate, items]: Missing value in Registry[ResourceKey[minecraft:root / minecraft:item] (Stable)] with key minecraft:grass
+[09:40:37] [Server thread/INFO]: [ServerI18nUtil] Starting load language: zh_cn
+[09:40:37] [ForkJoinPool.commonPool-worker-1/INFO]: [ServerI18nUtil] Successfully loaded language: zh_cn
+[09:40:37] [Server thread/INFO]: Default game type: SURVIVAL
+[09:40:37] [Server thread/INFO]: Generating keypair
+[09:40:37] [Server thread/INFO]: Starting Minecraft server on *:25565
+[09:40:37] [Server thread/INFO]: Using default channel type
+[09:40:37] [Server thread/INFO]: Paper: Using libdeflate (macOS ARM64 / Apple Silicon) compression from Velocity.
+[09:40:37] [Server thread/INFO]: Paper: Using native (macOS ARM64 / Apple Silicon) cipher from Velocity.
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [XConomy] Loading 1 libraries... please wait
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [XConomy] Loaded library /Users/server/Desktop/mcdr/server/libraries/redis/clients/jedis/4.3.1/jedis-4.3.1.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [XConomy] Loaded library /Users/server/Desktop/mcdr/server/libraries/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [XConomy] Loaded library /Users/server/Desktop/mcdr/server/libraries/org/apache/commons/commons-pool2/2.11.1/commons-pool2-2.11.1.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [XConomy] Loaded library /Users/server/Desktop/mcdr/server/libraries/org/json/json/20220320/json-20220320.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [XConomy] Loaded library /Users/server/Desktop/mcdr/server/libraries/com/google/code/gson/gson/2.8.9/gson-2.8.9.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loading 7 libraries... please wait
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/org/flywaydb/flyway-core/10.22.0/flyway-core-10.22.0.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/com/fasterxml/jackson/dataformat/jackson-dataformat-toml/2.15.2/jackson-dataformat-toml-2.15.2.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/com/fasterxml/jackson/core/jackson-databind/2.15.2/jackson-databind-2.15.2.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/com/fasterxml/jackson/core/jackson-core/2.15.2/jackson-core-2.15.2.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.15.2/jackson-datatype-jsr310-2.15.2.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/com/fasterxml/jackson/core/jackson-annotations/2.15.2/jackson-annotations-2.15.2.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/org/flywaydb/flyway-mysql/10.22.0/flyway-mysql-10.22.0.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/com/devskiller/friendly-id/friendly-id/1.1.0/friendly-id-1.1.0.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/junit/junit/4.10/junit-4.10.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/org/apache/maven/maven-artifact/4.0.0-rc-4/maven-artifact-4.0.0-rc-4.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/org/jetbrains/annotations/26.0.2/annotations-26.0.2.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/com/google/guava/guava/33.4.8-jre/guava-33.4.8-jre.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/com/google/guava/failureaccess/1.0.3/failureaccess-1.0.3.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/com/google/errorprone/error_prone_annotations/2.36.0/error_prone_annotations-2.36.0.jar
+[09:40:39] [Server thread/INFO]: [SpigotLibraryLoader] [EvenMoreFish] Loaded library /Users/server/Desktop/mcdr/server/libraries/com/google/j2objc/j2objc-annotations/3.0.0/j2objc-annotations-3.0.0.jar
+[09:40:39] [Server thread/INFO]: [floodgate] Loading server plugin floodgate v2.2.4-SNAPSHOT (b118-40d320a)
+[09:40:39] [Server thread/INFO]: [floodgate] 启动 Floodgate，耗时347ms
+[09:40:39] [Server thread/INFO]: [LuckPerms] Loading server plugin LuckPerms v5.5.10
+[09:40:40] [Server thread/INFO]: [LuckPerms] Loading configuration...
+[09:40:40] [Server thread/INFO]: [Geyser-Spigot] Loading server plugin Geyser-Spigot v2.8.3-SNAPSHOT
+[09:40:40] [Server thread/INFO]: [Geyser-Spigot] 正在加载扩展...
+[09:40:40] [Server thread/INFO]: [Geyser-Spigot] 已加载 0 个扩展
+[09:40:40] [Server thread/INFO]: [ProtocolLib] Loading server plugin ProtocolLib v5.4.0
+[09:40:40] [Server thread/INFO]: [Vault] Loading server plugin Vault v1.7.3-b131
+[09:40:40] [Server thread/INFO]: [PlaceholderAPI] Loading server plugin PlaceholderAPI v2.11.6
+[09:40:40] [Server thread/INFO]: [packetevents] Loading server plugin packetevents v2.9.5+24bf010d9-SNAPSHOT
+[09:40:41] [Server thread/INFO]: [Chunky] Loading server plugin Chunky v1.4.40
+[09:40:41] [Server thread/INFO]: [HuskHomes] Loading server plugin HuskHomes v4.9.9
+[09:40:41] [Server thread/INFO]: [HuskHomes] Registered 'on_load' hooks
+[09:40:41] [Server thread/INFO]: [HuskHomes] Successfully loaded HuskHomes v4.9.9
+[09:40:41] [Server thread/INFO]: [QuickShop-Hikari] Loading server plugin QuickShop-Hikari v6.2.0.10
+[09:40:41] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] QuickShop-Hikari - Bootstrap -> Execute the initialization sequence
+[09:40:41] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Bootloader preparing for startup, please wait...
+[09:40:41] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Initializing libraries...
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari] Maven repository mirror test result:
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari] [CN] ALIYUN: 45ms
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari] [CN] TENCENT: 69ms
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari] [CN] HUAWEI: 73ms
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari] [US] CENTRAL: 886ms
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari] [US] APACHE: 1215ms
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading 12 libraries (0 skipped libraries)...
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library org.apache.commons:commons-lang3:3.14.0 [1/12]
+[09:40:42] [Server thread/ERROR]: [STDERR] [org.slf4j.helpers.Util] SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+[09:40:42] [Server thread/ERROR]: [STDERR] [org.slf4j.helpers.Util] SLF4J: Defaulting to no-operation (NOP) logger implementation
+[09:40:42] [Server thread/ERROR]: [STDERR] [org.slf4j.helpers.Util] SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library org.apache.commons:commons-compress:1.25.0 [2/12]
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library com.google.code.gson:gson:2.10.1 [3/12]
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library com.google.guava:guava:33.1.0-jre [4/12]
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library com.rollbar:rollbar-java:1.9.0 [5/12]
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library cc.carm.lib:easysql-hikaricp:0.4.7 [6/12]
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library com.h2database:h2:2.1.214 [7/12]
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library com.konghq:unirest-java:3.14.5 [8/12]
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library net.sourceforge.csvjdbc:csvjdbc:1.0.42 [9/12]
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library org.dom4j:dom4j:2.1.4 [10/12]
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library com.vdurmont:semver4j:3.1.0 [11/12]
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Loading library com.ghostchu.crowdin:crowdinota:1.0.3 [12/12]
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Initialing Unirest...
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Initializing platform...
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Platform detected: Paper
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari] Slf4jLogger initialized
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Platform initialized: com.ghostchu.quickshop.platform.paper.PaperPlatform
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Boot QuickShop instance...
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Creating QuickShop instance...
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari] Registering Bukkit Service: com.ghostchu.quickshop.api.QuickShopProvider
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari] QuickShop Hikari - Early boot step - Booting up
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari] Self testing...
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari] Reading the configuration...
+[09:40:42] [Server thread/INFO]: [QuickShop-Hikari] [ConfigUpdater] Saving configuration changes...
+[09:40:43] [Server thread/INFO]: [QuickShop-Hikari] Setting up privacy controller...
+[09:40:43] [Server thread/INFO]: [QuickShop-Hikari] Setting up QuickShop registry....
+[09:40:43] [Server thread/INFO]: [QuickShop-Hikari] Setting up metrics manager...
+[09:40:43] [Server thread/INFO]: [QuickShop-Hikari] Loading player name and unique id mapping...
+[09:40:43] [Server thread/INFO]: [QuickShop-Hikari] Loading translations (This may take a while)...
+[09:40:43] [Server thread/INFO]: [QuickShop-Hikari] Please wait us fetch the translation updates from Crowdin OTA service...
+[09:40:43] [Server thread/INFO]: [CrowdinOTA] Downloading Crowdin distribution manifest from remote server...
+[09:40:43] [Server thread/INFO]: [OTAFileInstance-0] Downloading translations for 0 locales...
+[09:40:43] [Server thread/INFO]: [OTAFileInstance-1] Downloading translations for 0 locales...
+[09:40:43] [Server thread/INFO]: [QuickShop-Hikari] Loading up translations from Crowdin OTA, this may need a while...
+[09:40:44] [Server thread/INFO]: [QuickShop-Hikari] Loading up translations from Crowdin OTA, this may need a while...
+[09:40:44] [Server thread/INFO]: [QuickShop-Hikari] Register InventoryWrapper...
+[09:40:44] [Server thread/INFO]: [QuickShop-Hikari] Initializing NexusManager...
+[09:40:44] [Server thread/INFO]: [QuickShop-Hikari] QuickShop Hikari - Early boot step - Complete
+[09:40:44] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] QuickShop-Hikari - Bootstrap -> Complete (3383ms). Waiting for enable...
+[09:40:44] [Server thread/INFO]: [Matrix] Loading server plugin Matrix v7.16.2
+[09:40:45] [Server thread/INFO]: [Matrix] Checking Environment...
+[09:40:45] [Server thread/INFO]: [Matrix] Passed all environment checks
+[09:40:45] [Server thread/INFO]: [TAB] Loading server plugin TAB v5.2.5
+[09:40:45] [Server thread/INFO]: [GeyserExtras] Loading server plugin GeyserExtras v2.0.0
+[09:40:45] [Server thread/INFO]: [ESU] Loading server plugin ESU v0.8.1
+[09:40:45] [Server thread/INFO]: [MiniMOTD] Loading server plugin MiniMOTD v2.1.8
+[09:40:45] [Server thread/INFO]: [XConomy] Loading server plugin XConomy v2.26.3
+[09:40:45] [Server thread/INFO]: [Dominion] Loading server plugin Dominion v4.5.0-beta
+[09:40:45] [Server thread/INFO]: [ChunkyBorder] Loading server plugin ChunkyBorder v1.2.23
+[09:40:45] [Server thread/INFO]: [EconomyShopGUI] Loading server plugin EconomyShopGUI v6.14.4
+[09:40:45] [Server thread/INFO]: [HuskHomesForm] Loading server plugin HuskHomesForm v1.0.4
+[09:40:45] [Server thread/INFO]: [QuickShopForm] Loading server plugin QuickShopForm v2.1.5
+[09:40:45] [Server thread/INFO]: [Hurricane] Loading server plugin Hurricane v2.1-SNAPSHOT
+[09:40:45] [Server thread/INFO]: [CMILib] Loading server plugin CMILib v1.5.6.2
+[09:40:45] [Server thread/INFO]: [EvenMoreFish] Loading server plugin EvenMoreFish v2.0.9
+[09:40:45] [Server thread/INFO]: [CommandAPI] Loaded platform NMS_1_21_R5 > NMS_Common > CommandAPIBukkit
+[09:40:45] [Server thread/INFO]: [CommandAPI] Hooked into Spigot successfully for Chat/ChatComponents
+[09:40:45] [Server thread/INFO]: [CommandAPI] Hooked into Adventure for AdventureChat/AdventureChatComponents
+[09:40:45] [Server thread/INFO]: [CommandAPI] Hooked into Paper for paper-specific API implementations
+[09:40:45] [Server thread/INFO]: [LiteSignIn] Loading server plugin LiteSignIn v1.8.7.0
+[09:40:45] [Server thread/INFO]: [GeminiCraftChat] Loading server plugin GeminiCraftChat v1.0.8
+[09:40:45] [Server thread/INFO]: [FastAsyncWorldEdit] Loading server plugin FastAsyncWorldEdit v2.13.2-SNAPSHOT-1157;4165498
+[09:40:46] [Server thread/INFO]: Got request to register class com.sk89q.worldedit.bukkit.BukkitServerInterface with WorldEdit [com.sk89q.worldedit.extension.platform.PlatformManager@9b70181]
+[09:40:46] [Server thread/INFO]: [FarmControl] Loading server plugin FarmControl v1.3.0
+[09:40:46] [Server thread/INFO]: [EasyBot] Loading server plugin EasyBot v2.0.7
+[09:40:46] [Server thread/INFO]: [ISeeYou] Loading server plugin ISeeYou v1.3.9
+[09:40:46] [Server thread/INFO]: [InvSee++] Loading server plugin InvSeePlusPlus v0.30.7
+[09:40:46] [Server thread/INFO]: [FlyPlus] Loading server plugin FlyPlus v3.4.1
+[09:40:46] [Server thread/INFO]: [AdvancedBanX] Loading server plugin AdvancedBanX v3.1.0
+[09:40:46] [Server thread/INFO]: [LuckBedrock] Loading server plugin LuckBedrock v1.1
+[09:40:46] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
+[09:40:46] [Server thread/INFO]: [LuckPerms] Enabling LuckPerms v5.5.10
+[09:40:46] [Server thread/INFO]:         __    
+[09:40:46] [Server thread/INFO]:   |    |__)   LuckPerms v5.5.10
+[09:40:46] [Server thread/INFO]:   |___ |      Running on Bukkit - Leaves
+[09:40:46] [Server thread/INFO]: 
+[09:40:47] [Server thread/INFO]: [LuckPerms] Loading storage provider... [H2]
+[09:40:47] [Server thread/INFO]: [LuckPerms] Loading internal permission managers...
+[09:40:47] [Server thread/INFO]: [LuckPerms] Performing initial data load...
+[09:40:47] [Server thread/INFO]: [LuckPerms] Successfully enabled. (took 1498ms)
+[09:40:47] [Server thread/INFO]: [ProtocolLib] Enabling ProtocolLib v5.4.0
+[09:40:47] [Server thread/INFO]: [Vault] Enabling Vault v1.7.3-b131
+[09:40:47] [Server thread/INFO]: [Vault] [Permission] SuperPermissions loaded as backup permission system.
+[09:40:47] [Server thread/INFO]: [Vault] Enabled Version 1.7.3-b131
+[09:40:47] [Server thread/INFO]: [LuckPerms] Registered Vault permission & chat hook.
+[09:40:47] [Server thread/INFO]: [XConomy] Enabling XConomy v2.26.3
+[09:40:47] [Server thread/INFO]: [XConomy] UUID-Mode: Default
+[09:40:47] [Server thread/INFO]: [XConomy] Language: CHINESE
+[09:40:47] [Server thread/INFO]: [XConomy] 数据保存方式 - SQLite
+[09:40:48] [Server thread/INFO]: [XConomy] SQLite连接正常
+[09:40:48] [Server thread/INFO]: [XConomy] XConomy加载成功
+[09:40:48] [Server thread/INFO]: [XConomy] 发现 PlaceholderAPI
+[09:40:48] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: xconomy [2.26.3]
+[09:40:48] [Server thread/INFO]: [XConomy] PlaceholderAPI successfully hooked
+[09:40:48] [Server thread/INFO]: [XConomy] ===== YiC =====
+[09:40:48] [Server thread/INFO]: [FastAsyncWorldEdit] Enabling FastAsyncWorldEdit v2.13.2-SNAPSHOT-1157;4165498
+[09:40:48] [Server thread/INFO]: [com.fastasyncworldedit.core.Fawe] LZ4 Compression Binding loaded successfully
+[09:40:48] [Server thread/INFO]: [com.fastasyncworldedit.core.Fawe] ZSTD Compression Binding loaded successfully
+[09:40:48] [Server thread/INFO]: Registering commands with com.sk89q.worldedit.bukkit.BukkitServerInterface
+[09:40:48] [Server thread/INFO]: WEPIF: Vault detected! Using Vault for permissions
+[09:40:48] [Server thread/INFO]: Using com.sk89q.worldedit.bukkit.adapter.impl.fawe.v1_21_6.PaperweightFaweAdapter as the Bukkit adapter
+[09:40:49] [Folia Async Scheduler Thread #0/INFO]: [XConomy] 已是最新版本
+[09:40:49] [Server thread/INFO]: [EasyBot] Enabling EasyBot v2.0.7
+[09:40:49] [Server thread/INFO]: [EasyBot] 正在初始化功能
+[09:40:49] [Server thread/INFO]: [EasyBot] [>] 命令执行
+[09:40:49] [Server thread/INFO]: [EasyBot] 找到高版本命令接口,将优先使用此接口!
+[09:40:49] [Server thread/INFO]: [EasyBot] 命令接口初始化成功 [新版服务器方案]
+[09:40:49] [Server thread/INFO]: [EasyBot]   [OK] 命令执行
+[09:40:49] [Server thread/INFO]: [EasyBot] [>] 占位符
+[09:40:49] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: easybot [2.0.7]
+[09:40:49] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: ez-statistic [1.0.0]
+[09:40:49] [Server thread/INFO]: [EasyBot]   [OK] 占位符
+[09:40:49] [Server thread/INFO]: [EasyBot] ※ 已注册离线变量,专用文档: https://docs.hualib.com/offline-papi.html
+[09:40:49] [Server thread/INFO]: [EasyBot] ※ 当前服务器已开启正版验证
+[09:40:49] [Server thread/INFO]: [EasyBot] ※ 检测到GeyserMC插件
+[09:40:49] [Server thread/INFO]: [EasyBot] ※ 检测到Floodgate插件
+[09:40:49] [Server thread/INFO]: [EasyBot]  - 基岩版用户前缀: BE_
+[09:40:49] [Server thread/INFO]: [EasyBot]  - 您可以设置为忽略前缀, 忽略前缀后玩家将不再有前缀,例:BE_MiuxuE -> BE_MiuxuE
+[09:40:49] [Server thread/INFO]: [EasyBot]  - 请参考配置文件: geyser.ignore_prefix
+[09:40:49] [Server thread/INFO]: [EasyBot] ※ 您的服务器支持消息同步高级API
+[09:40:49] [Server thread/INFO]: [EasyBot] ※ 检测到Paper皮肤API,玩家皮肤将通过该接口获取(正版)！
+[09:40:49] [Server thread/INFO]: [com.springwater.easybot.libs.jetty.util.log] Logging initialized @21436ms to com.springwater.easybot.libs.jetty.util.log.Slf4jLog
+[09:40:49] [pool-34-thread-1/INFO]: [EasyBot] 正在连接到服务器: ws://47.107.162.240:26990/bridge
+[09:40:49] [Server thread/INFO]: [LuckBedrock] Enabling LuckBedrock v1.1
+[09:40:49] [Server thread/INFO]: [LuckBedrock] LuckBedrock is enabled.
+[09:40:49] [Server thread/INFO]: Preparing level "ad-ThirdSeason"
+[09:40:49] [Server thread/ERROR]: [MapSerializer] Could not deserialize key grass into class net.minecraft.world.item.Item at [entities, spawning, alt-item-despawn-rate, items]: Missing value in Registry[ResourceKey[minecraft:root / minecraft:item] (Stable)] with key minecraft:grass
+[09:40:50] [WebSocketClient@514354644-126/INFO]: [EasyBot] 已连接到服务器: ws://47.107.162.240:26990/bridge
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] 已连接到主程序!
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] >>>主程序连接信息<<<
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] 系统: Unix-based(linux-x64)
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] 运行时版本: .NET 8.0.17
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] 主程序版本: EasyBot v1.3.3
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] 连接信息: 9b2ffcf9-5d6c-4269-bdad-639fb8b58e7e (心跳:120s)
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] >>>服务器信息<<<
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] 令牌: c3o9UZEmSMaSFLkO0QPBoHPNLFpO4KY5
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] 服务器: Leaves 1.21.8-R0.1-SNAPSHOT
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] 插件版本: 2.0.7
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] 支持命令: true
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] 变量支持:true
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] >>>准备上传<<<
+[09:40:50] [WebSocketClient@514354644-120/INFO]: [EasyBot] 上报身份中...
+[09:40:50] [WebSocketClient@514354644-125/INFO]: [EasyBot] 身份验证成功! 服务器名: azuredream
+[09:40:50] [WebSocketClient@514354644-125/INFO]: [EasyBot] 已连接到主程序!
+[09:40:51] [Server thread/ERROR]: [MapSerializer] Could not deserialize key grass into class net.minecraft.world.item.Item at [entities, spawning, alt-item-despawn-rate, items]: Missing value in Registry[ResourceKey[minecraft:root / minecraft:item] (Stable)] with key minecraft:grass
+[09:40:51] [Server thread/ERROR]: [MapSerializer] Could not deserialize key grass into class net.minecraft.world.item.Item at [entities, spawning, alt-item-despawn-rate, items]: Missing value in Registry[ResourceKey[minecraft:root / minecraft:item] (Stable)] with key minecraft:grass
+[09:40:51] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[09:40:51] [Server thread/INFO]: 准备生成区域中：0%
+[09:40:51] [Server thread/INFO]: Time elapsed: 494 ms
+[09:40:51] [Server thread/INFO]: Preparing start region for dimension minecraft:the_nether
+[09:40:51] [Server thread/INFO]: 准备生成区域中：0%
+[09:40:51] [Server thread/INFO]: Time elapsed: 108 ms
+[09:40:51] [Server thread/INFO]: Preparing start region for dimension minecraft:the_end
+[09:40:51] [Server thread/INFO]: 准备生成区域中：0%
+[09:40:51] [Server thread/INFO]: Time elapsed: 186 ms
+[09:40:51] [Server thread/INFO]: [floodgate] Enabling floodgate v2.2.4-SNAPSHOT (b118-40d320a)
+[09:40:52] [Server thread/INFO]: [Geyser-Spigot] Enabling Geyser-Spigot v2.8.3-SNAPSHOT
+[09:40:52] [Server thread/INFO]: [PlaceholderAPI] Enabling PlaceholderAPI v2.11.6
+[09:40:53] [Server thread/INFO]: [PlaceholderAPI] Fetching available expansion information...
+[09:40:53] [Server thread/INFO]: [packetevents] Enabling packetevents v2.9.5+24bf010d9-SNAPSHOT
+[09:40:53] [packetevents-update-check-thread/INFO]: [packetevents] Checking for updates, please wait...
+[09:40:53] [Server thread/INFO]: [Chunky] Enabling Chunky v1.4.40
+[09:40:53] [Server thread/INFO]: [HuskHomes] Enabling HuskHomes v4.9.9
+[09:40:53] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: huskhomes [4.9.9]
+[09:40:53] [Server thread/INFO]: [HuskHomes] Registered 'on_enable' hooks
+[09:40:53] [Server thread/INFO]: [HuskHomes] Successfully enabled HuskHomes v4.9.9
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] Enabling QuickShop-Hikari v6.2.0.10
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] QuickShop-Hikari - Bootstrap -> Execute the enable sequence
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] QuickShop Hikari
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] Registering Bukkit Service: com.ghostchu.quickshop.api.QuickShopProvider
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] Starting plugin self-test, please wait...
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [OK] Spigot Based Server Test
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [OK] Old QuickShop Test
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [OK] ModdedServer Based Test
+[09:40:53] [placeholderapi-io-#0/WARN]: [PlaceholderAPI] Failed to download expansion information
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:318) ~[?:?]
+	at java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:346) ~[?:?]
+	at java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:796) ~[?:?]
+	at java.base/java.net.Socket$SocketInputStream.read(Socket.java:1099) ~[?:?]
+	at java.base/java.io.BufferedInputStream.fill(BufferedInputStream.java:291) ~[?:?]
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:347) ~[?:?]
+	at java.base/java.io.BufferedInputStream.implRead(BufferedInputStream.java:420) ~[?:?]
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:399) ~[?:?]
+	at java.base/sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:827) ~[?:?]
+	at java.base/sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:759) ~[?:?]
+	at java.base/sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:786) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1706) ~[?:?]
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1615) ~[?:?]
+	at java.base/java.net.URL.openStream(URL.java:1325) ~[?:?]
+	at com.google.common.io.Resources$UrlByteSource.openStream(Resources.java:70) ~[guava-33.3.1-jre.jar:?]
+	at com.google.common.io.ByteSource.read(ByteSource.java:296) ~[guava-33.3.1-jre.jar:?]
+	at com.google.common.io.ByteSource$AsCharSource.read(ByteSource.java:486) ~[guava-33.3.1-jre.jar:?]
+	at com.google.common.io.Resources.toString(Resources.java:109) ~[guava-33.3.1-jre.jar:?]
+	at PlaceholderAPI-2.11.6.jar/me.clip.placeholderapi.expansion.manager.CloudExpansionManager.lambda$fetch$4(CloudExpansionManager.java:182) ~[PlaceholderAPI-2.11.6.jar:?]
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572) ~[?:?]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[?:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [OK] ModdedServer Database Driver Test
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [OK] CoreSupport Test
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [OK] Virtual DisplayItem Support Test
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [OK] ProtocolLib Incorrect Locate Test
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [OK] GameVersion supporting Test
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [OK] Permission Manager Test
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [OK] PacketListenerAPI Conflict Test
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [OK] Reremake Test
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [OK] EcoEnchants V11 Check
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [OK] End of life Test
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] Reading the configuration...
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] [ConfigUpdater] Saving configuration changes...
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] Contributors: Ghost_chu, PotatoCraft Studio, Netherfoam, Timtower, KaiNoMood (KaiKikuchi), sandtechnology, jho5245, cakoyo, Andre601, Ectabro, Chris6ix, portlek, log4b0at, deadman96385, tiararinne, DoctaEnkoda, CarmJos, YuanYuanOwO, Mgazul, mart-r, Tim269, raphtaliapt, creatorfromhell, LoneDev6, Steven-OS, confuxeon, ibmibmibm, judgetread, mfnalex, Warriorrrr, PyvesB, yannicklamprecht, ORelio, RMSCA, Starmism, yiwenwang2090, PaulBGD, Nlkomaru, harry0198, Draesia, Localized community members on Crowdin
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] Original author: Netherfoam, Timtower, KaiNoMood, sandtechnology
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] Let's start loading the plugin
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] Setting up ItemExpressionRegistry...
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] Using Virtual Displays. Attempting to initialize packet factory...
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] Setting up database...
+[09:40:53] [Server thread/INFO]: [QuickShop-Hikari] Create database backup...
+[09:40:53] [Server thread/INFO]: [cc.carm.lib.easysql.hikari.HikariDataSource] HikariPool-1 - Starting...
+[09:40:53] [packetevents-update-check-thread/INFO]: [packetevents] You are running a development build of PacketEvents. Your build: (2.9.5+24bf010d9-SNAPSHOT) | Latest release: (2.9.4)
+[09:40:54] [Server thread/INFO]: [cc.carm.lib.easysql.hikari.HikariDataSource] HikariPool-1 - Start completed.
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Checking and updating database columns, it may take a while...
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Database upgrade script running... Current Database Version: 19
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Finished!
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Selected permission provider: Bukkit
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Registering commands...
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Loaded 1 rules for listener blacklist.
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] EventManager selected: QSEventManager
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Loading shops from database...
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Used 11ms to fetch 1 shops from database.
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Loading shops into memory...
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Used 28ms to load 0 shops into memory (1 shops will be loaded after chunks/world loaded).
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Registering listeners...
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Cleaning MsgUtils...
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Cleaning purchase messages from the database that are over a week old...
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Log actions is enabled. Actions will be logged in the qs.log file!
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] [Shop Purger] Purge not enabled!
+[09:40:54] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: qs [6.2.0.10]
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] Successfully loaded PlaceHolderAPI support!
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari] [OK] Virtual DisplayItem Support Test
+[09:40:54] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] QuickShop-Hikari - Bootstrap -> All Complete. (1117ms)
+[09:40:54] [Server thread/INFO]: [Matrix] Enabling Matrix v7.16.2
+[09:40:54] [Server thread/INFO]: *   __  __       _        _
+[09:40:54] [Server thread/INFO]: *  |  \/  |     | |      (_)
+[09:40:54] [Server thread/INFO]: *  | \  / | __ _| |_ _ __ ___  __
+[09:40:54] [Server thread/INFO]: *  | |\/| |/ _` | __| '__| \ \/ /
+[09:40:54] [Server thread/INFO]: *  | |  | | (_| | |_| |  | |>  <
+[09:40:54] [Server thread/INFO]: *  |_|  |_|\__,_|\__|_|  |_/_/\_\
+[09:40:54] [Server thread/INFO]: * Matrix AntiCheat v7.16.2 | 1.21.8-91-956f022 (MC: 1.21.8)
+[09:40:54] [Server thread/INFO]: [Matrix] Server Version: V1_21_8 (#21)
+[09:40:55] [Server thread/INFO]: [Matrix] Hooked with PlaceholderAPI
+[09:40:55] [Server thread/WARN]: [Matrix] Malformed custom vl weight setting:  
+[09:40:55] [Server thread/INFO]: [Matrix] Loaded 15 global placeholders
+[09:40:55] [Server thread/INFO]: [Matrix] Enabled 12 checks, Disabled 3 checks
+[09:40:55] [Server thread/WARN]: [Matrix] You have enabled the `hitbox.strict_mode` option, which is experimental and may cause false positives, please use it carefully!
+[09:40:55] [Server thread/INFO]: [Matrix] Loaded all configuration files
+[09:40:55] [Server thread/INFO]: [Matrix] (Compatibility) Hooked with GeyserMC
+[09:40:55] [Server thread/INFO]: [Matrix] (Compatibility) Hooked with Floodgate
+[09:40:55] [Server thread/INFO]: [Matrix] Scanning outdated log files....
+[09:40:55] [Server thread/INFO]: [Matrix] Deleted 0 outdated log files!
+[09:40:55] [Server thread/INFO]: [Matrix] Welcome to Matrix!
+[09:40:55] [Server thread/INFO]: [TAB] Enabling TAB v5.2.5
+[09:40:55] [Server thread/INFO]: [TAB] Enabled in 119ms
+[09:40:55] [Server thread/INFO]: [GeyserExtras] Enabling GeyserExtras v2.0.0
+[09:40:55] [Server thread/INFO]: [GeyserExtras] --------------GeyserExtras--------------
+[09:40:55] [Server thread/INFO]: [GeyserExtras] Version: 2.0.0-BETA-7
+[09:40:55] [Server thread/INFO]: [GeyserExtras] Server Type: SPIGOT
+[09:40:55] [Server thread/INFO]: [GeyserExtras] Platform Type: Spigot
+[09:40:55] [Server thread/INFO]: [GeyserExtras] Floodgate installed: Yes
+[09:40:55] [Server thread/INFO]: [GeyserExtras] Loading config...
+[09:40:56] [Server thread/WARN]: [GeyserExtras] WARNING: Floodgate is installed, so GeyserExtras Settings will not
+[09:40:56] [Server thread/WARN]: [GeyserExtras] show up in the Game Settings menu due to how forms work on GeyserMC.
+[09:40:56] [Server thread/WARN]: [GeyserExtras] If you want a temporary work around to this, use Geyser-Standalone,
+[09:40:56] [Server thread/WARN]: [GeyserExtras] otherwise a notification toast will show up informing players that
+[09:40:56] [Server thread/WARN]: [GeyserExtras] they will have to double tap inventory.
+[09:40:56] [Server thread/INFO]: [GeyserExtras] Registering events...
+[09:40:56] [Server thread/INFO]: [ESU] Enabling ESU v0.8.1
+[09:40:56] [Server thread/INFO]: [com.zaxxer.hikari.HikariDataSource] ESU-HikariPool - Starting...
+[09:40:56] [Server thread/INFO]: [com.zaxxer.hikari.pool.HikariPool] ESU-HikariPool - Added connection conn0: url=jdbc:h2:file:./plugins/ESU/h2 user=ROOT
+[09:40:56] [Server thread/INFO]: [com.zaxxer.hikari.HikariDataSource] ESU-HikariPool - Start completed.
+[09:40:57] [Server thread/INFO]: [MiniMOTD] Enabling MiniMOTD v2.1.8
+[09:40:57] [Thread-28/WARN]: [GeyserExtras] GeyserExtras is on the latest version.
+[09:40:57] [pool-18-thread-1/WARN]: [floodgate] 
+**********************************
+* The prefix you entered in your Floodgate config (BE_) could lead to username conflicts!
+* Should a Java player join with the username BE_Notch, and a Bedrock player join as Notch (who will be given the name BE_Notch), unwanted results will happen!
+* We strongly recommend using . as the prefix, but other alternatives that will not conflict include: +, - and *
+**********************************
+[09:40:57] [pool-18-thread-1/WARN]: [floodgate] 
+**********************************
+* The prefix you entered in your Floodgate config (BE_) is long! (3 characters)
+* A prefix is there to prevent username conflicts. However, a long prefix makes the chance of username conflicts higher.
+* We strongly recommend using . as the prefix, but other alternatives that will not conflict include: +, - and *
+**********************************
+[09:40:57] [Server thread/INFO]: [Dominion] Enabling Dominion v4.5.0-beta
+[09:40:57] [Server thread/INFO]: [Dominion]  I |   _____                  _       _
+[09:40:57] [Server thread/INFO]: [Dominion]  I |  |  __ \                (_)     (_)
+[09:40:57] [Server thread/INFO]: [Dominion]  I |  | |  | | ___  _ __ ___  _ _ __  _  ___  _ __
+[09:40:57] [Server thread/INFO]: [Dominion]  I |  | |  | |/ _ \| '_ ` _ \| | '_ \| |/ _ \| '_ \
+[09:40:57] [Server thread/INFO]: [Dominion]  I |  | |__| | (_) | | | | | | | | | | | (_) | | | |
+[09:40:57] [Server thread/INFO]: [Dominion]  I |  |_____/ \___/|_| |_| |_|_|_| |_|_|\___/|_| |_|
+[09:40:57] [Server thread/INFO]: [Dominion]  I |  
+[09:40:57] [Server thread/INFO]: [Dominion]  I | Plugin Version: 4.5.0-beta
+[09:40:57] [Server thread/INFO]: [Dominion]  I | Loading Configurations...
+[09:40:57] [Server thread/INFO]: [Dominion]  I | Loading limitation configuration...
+[09:40:57] [Server thread/INFO]: [Dominion]  I | Loading limitation file: default.yml...
+[09:40:57] [Server thread/INFO]: [Dominion]  I | Loading world-settings...
+[09:40:57] [Server thread/INFO]: [Dominion]  I | Loading world-settings of default...
+[09:40:57] [Server thread/INFO]: [Dominion]  I | Successfully loaded 1 world-settings: default.
+[09:40:57] [Server thread/INFO]: [Dominion]  I | Successfully loaded 1 limitations: default.
+[09:40:57] [Server thread/INFO]: [Dominion] Successfully loaded configuration.
+[09:40:57] [Server thread/INFO]: [Dominion] Loading language zh_cn...
+[09:40:57] [Server thread/INFO]: [Dominion] 成功加载语言 zh_cn。
+[09:40:57] [Server thread/INFO]: [Dominion]  I | 加载权限配置...
+[09:40:57] [Server thread/INFO]: [Dominion]  I | 成功加载权限配置。
+[09:40:57] [Server thread/INFO]: [Dominion] 准备数据库连接...
+[09:40:57] [Server thread/INFO]: [com.zaxxer.hikari.HikariDataSource] HikariPool-1 - Starting...
+[09:40:57] [Server thread/INFO]: [com.zaxxer.hikari.pool.HikariPool] HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@4bd5abec
+[09:40:57] [Server thread/INFO]: [com.zaxxer.hikari.HikariDataSource] HikariPool-1 - Start completed.
+[09:40:57] [Server thread/INFO]: [Dominion] 数据库连接成功！
+[09:40:57] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: dominion [4.5.0-beta]
+[09:40:57] [Server thread/INFO]: [领地]  I | 启动完成！
+[09:40:57] [Server thread/INFO]: [领地]  I | 开始清理 180 天没有登录的玩家数据...
+[09:40:57] [Server thread/INFO]: [领地]  I | 自动清理完成！
+[09:40:57] [Server thread/INFO]: [ChunkyBorder] Enabling ChunkyBorder v1.2.23
+[09:40:57] [Server thread/INFO]: [EconomyShopGUI] Enabling EconomyShopGUI v6.14.4
+[09:40:57] [Server thread/INFO]: [EconomyShopGUI] [INFO]: Using lang-zh_cn.yml as language file
+[09:40:57] [Server thread/INFO]: [EconomyShopGUI] [INFO]: 成功载入位于 /sections/ 下的共 16 个选区配置
+[09:40:57] [Server thread/INFO]: [EconomyShopGUI] [INFO]: 成功载入位于 /shops/ 下的共 16 个商店
+[09:40:57] [Server thread/INFO]: [EconomyShopGUI] [INFO]: 正在更新商店设置……
+[09:40:57] [Server thread/INFO]: [EconomyShopGUI] [INFO]: Successfully hooked into Vault and using XConomy as economy provider
+[09:40:57] [Server thread/INFO]: [EconomyShopGUI] [INFO]: 成功为所有 14 个商店选区载入了 1 个经济提供插件。
+[09:40:57] [Server thread/INFO]: [EconomyShopGUI] [INFO]: 正在运行的 Minecraft 版本为 1.21.8……
+[09:40:57] [Server thread/INFO]: [EconomyShopGUI] [INFO]: Spawner provider 已於設定檔中指定為 AUTO.
+[09:40:57] [Server thread/INFO]: [EconomyShopGUI] [INFO]: Automatically searching for compatible spawner provider....
+[09:40:57] [Server thread/INFO]: [EconomyShopGUI] [INFO]: Failed to automatically find compatible spawner provider, using default...
+[09:40:57] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: esgui [1.1.0]
+[09:40:57] [Server thread/INFO]: [EconomyShopGUI] [INFO]: 已启用调试模式。
+[09:40:57] [Server thread/INFO]: [EconomyShopGUI] [INFO]: 正在加载所有物品……
+[09:40:58] [Server thread/INFO]: [EconomyShopGUI] [INFO]: 初始化完毕 - 用时 314 毫秒
+[09:40:58] [Server thread/INFO]: [HuskHomesForm] Enabling HuskHomesForm v1.0.4
+[09:40:58] [Server thread/INFO]: [HuskHomesForm] HuskHomesForm 已成功启用!
+[09:40:58] [Server thread/INFO]: [QuickShopForm] Enabling QuickShopForm v2.1.5
+[09:40:58] [Server thread/INFO]: [QuickShopForm] Detect: QuickShop-Hikari
+[09:40:58] [Server thread/INFO]: [Hurricane] Enabling Hurricane v2.1-SNAPSHOT
+[09:40:58] [Server thread/INFO]: [Hurricane] Bamboo collision hack enabled.
+[09:40:58] [Server thread/INFO]: [Hurricane] Dripstone collision hack enabled.
+[09:40:58] [Server thread/INFO]: [CMILib] Enabling CMILib v1.5.6.2
+[09:40:58] [Server thread/INFO]: Server version: v1_21_R5 - 1.21.8 - leaves  1.21.8-91-956f022 (MC: 1.21.8)
+[09:40:59] [Server thread/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[09:40:59] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: cmil [1.5.6.2]
+[09:40:59] [Server thread/INFO]: PlaceholderAPI hooked.
+[09:40:59] [Server thread/INFO]: Updated (EN) language file. Took 35ms
+[09:40:59] [Server thread/INFO]: [EvenMoreFish] Enabling EvenMoreFish v2.0.9
+[09:40:59] [Server thread/INFO]: [NBTAPI] [NBTAPI] Found Minecraft: 1.21.8! Trying to find NMS support
+[09:40:59] [Server thread/INFO]: [NBTAPI] [NBTAPI] NMS support 'MC1_21_R5' loaded!
+[09:40:59] [Server thread/INFO]: [NBTAPI] [NBTAPI] Using the plugin 'EvenMoreFish' to create a bStats instance!
+[09:40:59] [Server thread/INFO]: [CommandAPI] Hooked into Paper ServerResourcesReloadedEvent
+[09:40:59] [Server thread/INFO]: [EvenMoreFish] Successfully loaded all configurations
+[09:40:59] [Server thread/INFO]: [EvenMoreFish] Economy attempting to hook into Vault.
+[09:40:59] [Server thread/INFO]: [EvenMoreFish] Economy hooked into Vault.
+[09:40:59] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: emf [2.0.9]
+[09:40:59] [Server thread/INFO]: [EvenMoreFish] Loaded Addon Java 21 Addons 1.1.0 by [EvenMoreFish]
+[09:40:59] [Server thread/INFO]: [EvenMoreFish] Loaded Addon Java 17 Addons 1.1.0 by [EvenMoreFish]
+[09:40:59] [Server thread/INFO]: [EvenMoreFish] Loaded Addon Internal Addons 1.0.0 by [EvenMoreFish]
+[09:40:59] [Server thread/INFO]: [EvenMoreFish] Database is disabled in config
+[09:40:59] [Server thread/INFO]: [EvenMoreFish] Loaded FishManager with 5 Rarities and 71 Fish.
+[09:40:59] [Server thread/INFO]: [EvenMoreFish] Loaded 6 baits successfully.
+[09:40:59] [Server thread/INFO]: [EvenMoreFish] Loaded RodManager with 1 Custom Rods.
+[09:40:59] [Server thread/INFO]: [EvenMoreFish] EvenMoreFish by Oheers : Enabled
+[09:40:59] [Server thread/INFO]: [LiteSignIn] Enabling LiteSignIn v1.8.7.0
+[09:40:59] [Server thread/INFO]: [LiteSignIn] 语言信息已加载。
+[09:40:59] [Server thread/INFO]: [LiteSignIn] 已启用 命令监听器 。
+[09:40:59] [Server thread/INFO]: [LiteSignIn] 已启用 事件监听器 。
+[09:40:59] [Server thread/INFO]: LiteSignIn >>> 成功连接到 SQLite 服务器.
+[09:40:59] [Server thread/INFO]: [PlaceholderAPI] Successfully registered internal expansion: litesignin [1.0.0]
+[09:40:59] [Server thread/INFO]: LiteSignIn >>> 找到 PlaceholderAPI ， 准备就绪。
+[09:40:59] [Server thread/INFO]: LiteSignIn >>> 异步线程开始运行
+[09:40:59] [Server thread/INFO]: LiteSignIn >>> 插件加载完成。
+[09:40:59] [Server thread/INFO]: [GeminiCraftChat] Enabling GeminiCraftChat v1.0.8
+[09:40:59] [Server thread/INFO]: [GeminiCraftChat] 正在初始化 GeminiCraftChat 插件...
+[09:40:59] [Server thread/INFO]: [GeminiCraftChat] 配置加载成功
+[09:40:59] [Server thread/INFO]: [GeminiCraftChat] 日志管理器初始化成功
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 聊天管理器初始化成功
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 命令注册成功
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 事件监听器注册成功
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 当前使用的模型: API接口1
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 可用模型: api1, api2, api3, api4, api5
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 默认触发词: ai
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 其他触发词: ai, @ai, !ai
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 已加载 7 个人设
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 敏感词过滤已启用，共 2 个敏感词
+[09:41:00] [GCC-AsyncLogger/INFO]: [GeminiCraftChat] 异步日志处理器已启动
+[09:41:00] [GCC-AsyncLogger/INFO]: [GeminiCraftChat] 异步日志处理器已停止
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 异步日志系统已启动 - 队列大小: 10000, 批处理大小: 50
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 异步日志管理器初始化成功
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 性能监控已启动 - 监控间隔: 30秒, 自动调优: true
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 性能监控系统初始化成功
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 验证NPC配置...
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 服务器可用世界: ad-ThirdSeason, ad-ThirdSeason_nether, ad-ThirdSeason_the_end
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 智能NPC管理器已初始化 - 加载了 2 个NPC，最大活跃数: 20
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 智能NPC管理器初始化成功
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] bStats统计已启用 - 插件ID: 26354
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] 统计数据完全匿名，用于改进插件功能
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] bStats统计初始化成功
+[09:41:00] [Server thread/INFO]: [GeminiCraftChat] GeminiCraftChat v1.0.8 插件已成功启动!
+[09:41:00] [Server thread/INFO]: [FarmControl] Enabling FarmControl v1.3.0
+[09:41:00] [Server thread/INFO]: [ISeeYou] Enabling ISeeYou v1.3.9
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r██╗███████╗███████╗███████╗██╗   ██╗ ██████╗ ██╗   ██╗
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r██║██╔════╝██╔════╝██╔════╝╚██╗ ██╔╝██╔═══██╗██║   ██║
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r██║███████╗█████╗  █████╗   ╚████╔╝ ██║   ██║██║   ██║
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r██║╚════██║██╔══╝  ██╔══╝    ╚██╔╝  ██║   ██║██║   ██║
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r██║███████║███████╗███████╗   ██║   ╚██████╔╝╚██████╔╝
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r╚═╝╚══════╝╚══════╝╚══════╝   ╚═╝    ╚═════╝  ╚═════╝
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r开始删除过期的记录文件在 replay/player 和 replay/suspicious
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r未找到需要删除的过期记录文件。
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r未找到需要删除的过期记录文件。
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r未找到需要删除的过期记录文件。
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r未找到需要删除的过期记录文件。
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r未找到需要删除的过期记录文件。
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r未找到需要删除的过期记录文件。
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r已删除过期的记录文件，删除了 0 个文件
+[09:41:00] [Server thread/INFO]: [ISeeYou] §a[INFO] §r注册 Matrix 监听器...
+[09:41:00] [Server thread/INFO]: [InvSee++] Enabling InvSeePlusPlus v0.30.7
+[09:41:00] [Server thread/INFO]: [FlyPlus] Enabling FlyPlus v3.4.1
+[09:41:00] [Server thread/INFO]: [FlyPlus] Successfully hooked into LuckPerms!
+[09:41:00] [Server thread/INFO]: [FlyPlus] Enabled!
+[09:41:00] [Server thread/INFO]: [AdvancedBanX] Enabling AdvancedBanX v3.1.0
+[09:41:01] [Server thread/INFO]: [AdvancedBanX] 
+
+[]=====[Enabling AdvancedBanX]=====[]
+| Information:
+|   Name: AdvancedBanX
+|   Developer: Leoko
+|   Maintainer & Updater: 2vY
+|   Version: 3.1.0
+|   Storage: HSQLDB (local)
+| Support:
+|   GitHub: https://github.com/hlpdev/AdvancedBanX/issues
+| Update:
+|   There is a new version available! [[3.1.0]]
+[]================================[]
+ 
+[09:41:02] [Server thread/INFO]: [Geyser-Spigot] ******************************************
+[09:41:02] [Server thread/INFO]: [Geyser-Spigot] 
+[09:41:02] [Server thread/INFO]: [Geyser-Spigot] 正在加载 Geyser 版本 2.8.3-b903 (git-master-61a1ddd)
+[09:41:02] [Server thread/INFO]: [Geyser-Spigot] 
+[09:41:02] [Server thread/INFO]: [Geyser-Spigot] ******************************************
+[09:41:04] [GeyserServer-3-1/ERROR]: [Geyser-Spigot] 在 0.0.0.0:25565 上启动 Geyser 失败
+[09:41:04] [Server thread/ERROR]: Could not pass event ServerLoadEvent to Geyser-Spigot v2.8.3-SNAPSHOT
+java.util.concurrent.CompletionException: java.net.BindException: Address already in use
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:332) ~[?:?]
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:347) ~[?:?]
+	at java.base/java.util.concurrent.CompletableFuture$BiRelay.tryFire(CompletableFuture.java:1498) ~[?:?]
+	at java.base/java.util.concurrent.CompletableFuture$CoCompletion.tryFire(CompletableFuture.java:1219) ~[?:?]
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:510) ~[?:?]
+	at java.base/java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2194) ~[?:?]
+	at Geyser-Spigot.jar/org.geysermc.geyser.network.netty.Bootstraps.lambda$allOf$0(Bootstraps.java:128) ~[Geyser-Spigot.jar:?]
+	at io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:590) ~[netty-common-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:557) ~[netty-common-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:492) ~[netty-common-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.util.concurrent.DefaultPromise.addListener(DefaultPromise.java:185) ~[netty-common-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.channel.DefaultChannelPromise.addListener(DefaultChannelPromise.java:95) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.channel.DefaultChannelPromise.addListener(DefaultChannelPromise.java:30) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.bootstrap.AbstractBootstrap$2.run(AbstractBootstrap.java:380) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:173) ~[netty-common-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:166) ~[netty-common-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:472) ~[netty-common-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:569) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998) ~[netty-common-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[netty-common-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[netty-common-4.1.118.Final.jar:4.1.118.Final]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+Caused by: java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method) ~[?:?]
+	at java.base/sun.nio.ch.Net.bind(Net.java:565) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.bindInternal(DatagramChannelImpl.java:1329) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.bind(DatagramChannelImpl.java:1299) ~[?:?]
+	at io.netty.util.internal.SocketUtils$6.run(SocketUtils.java:133) ~[netty-common-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.util.internal.SocketUtils$6.run(SocketUtils.java:130) ~[netty-common-4.1.118.Final.jar:4.1.118.Final]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571) ~[?:?]
+	at io.netty.util.internal.SocketUtils.bind(SocketUtils.java:130) ~[netty-common-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.channel.socket.nio.NioDatagramChannel.doBind0(NioDatagramChannel.java:202) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.channel.socket.nio.NioDatagramChannel.doBind(NioDatagramChannel.java:197) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.bind(AbstractChannel.java:561) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.bind(DefaultChannelPipeline.java:1281) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeBind(AbstractChannelHandlerContext.java:600) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.bind(AbstractChannelHandlerContext.java:579) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.channel.DefaultChannelPipeline.bind(DefaultChannelPipeline.java:922) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.channel.AbstractChannel.bind(AbstractChannel.java:259) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at Geyser-Spigot.jar/org.cloudburstmc.netty.handler.codec.raknet.ProxyOutboundRouter.bind(ProxyOutboundRouter.java:48) ~[Geyser-Spigot.jar:?]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeBind(AbstractChannelHandlerContext.java:606) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.bind(AbstractChannelHandlerContext.java:579) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at io.netty.channel.DefaultChannelPipeline.bind(DefaultChannelPipeline.java:922) ~[netty-transport-4.1.118.Final.jar:4.1.118.Final]
+	at Geyser-Spigot.jar/org.cloudburstmc.netty.channel.proxy.ProxyChannel.bind(ProxyChannel.java:188) ~[Geyser-Spigot.jar:?]
+	... 9 more
+[09:41:04] [Server thread/INFO]: [PlaceholderAPI] Placeholder expansion registration initializing...
+[09:41:04] [Server thread/INFO]: Done preparing level "ad-ThirdSeason" (15.129s)
+[09:41:04] [Server thread/INFO]: Running delayed init tasks
+[09:41:04] [Craft Scheduler Thread - 0 - QuickShop-Hikari/INFO]: [QuickShop-Hikari] Start to caching usernames (async)...
+[09:41:04] [Craft Scheduler Thread - 5 - Matrix/INFO]: [Matrix] 正在检测更新....
+[09:41:04] [Server thread/INFO]: [ISeeYou] §a[INFO] §r开始删除过期的记录文件在 replay/player 和 replay/suspicious
+[09:41:04] [Server thread/INFO]: [ISeeYou] §a[INFO] §r未找到需要删除的过期记录文件。
+[09:41:04] [Server thread/INFO]: [ISeeYou] §a[INFO] §r未找到需要删除的过期记录文件。
+[09:41:04] [Server thread/INFO]: [ISeeYou] §a[INFO] §r未找到需要删除的过期记录文件。
+[09:41:04] [Server thread/INFO]: [ISeeYou] §a[INFO] §r未找到需要删除的过期记录文件。
+[09:41:04] [Server thread/INFO]: [ISeeYou] §a[INFO] §r未找到需要删除的过期记录文件。
+[09:41:04] [Server thread/INFO]: [ISeeYou] §a[INFO] §r未找到需要删除的过期记录文件。
+[09:41:04] [Server thread/INFO]: [ISeeYou] §a[INFO] §r已删除过期的记录文件，删除了 0 个文件
+[09:41:04] [Craft Scheduler Thread - 12 - Vault/INFO]: [Vault] Checking for Updates ... 
+[09:41:04] [Server thread/INFO]: [QuickShop-Hikari] Using economy system: XConomy
+[09:41:04] [Server thread/INFO]: [QuickShop-Hikari] Selected economy bridge: BuiltIn-Vault
+[09:41:04] [Server thread/INFO]: [PlaceholderAPI] Successfully registered external expansion: player [2.0.8]
+[09:41:04] [Server thread/INFO]: [PlaceholderAPI] Successfully registered external expansion: server [2.7.3]
+[09:41:04] [Server thread/INFO]: [PlaceholderAPI] Successfully registered external expansion: localtime [1.2]
+[09:41:04] [Server thread/INFO]: [PlaceholderAPI] Successfully registered external expansion: statistic [2.0.2]
+[09:41:04] [Server thread/INFO]: [PlaceholderAPI] Successfully registered external expansion: vault [1.8.3]
+[09:41:04] [Server thread/INFO]: 5 placeholder hook(s) registered!
+[09:41:04] [Server thread/INFO]: Done (34.763s)! For help, type "help"
+[09:41:05] [Server thread/ERROR]: Could not pass event EntityDamageByBlockEvent to GeminiCraftChat v1.0.8
+java.lang.NullPointerException: Cannot invoke "cn.ningmo.geminicraftchat.npc.NpcService.isEnabled()" because "this.npcManager" is null
+	at geminicraftchat-1.0.8.jar/cn.ningmo.geminicraftchat.listeners.NPCListener.onEntityDamage(NPCListener.java:74) ~[geminicraftchat-1.0.8.jar:?]
+	at org.bukkit.plugin.RegisteredListener.callEvent(RegisteredListener.java:71) ~[leaves-api-1.21.8-R0.1-SNAPSHOT.jar:?]
+	at io.papermc.paper.plugin.manager.PaperEventManager.callEvent(PaperEventManager.java:69) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at io.papermc.paper.plugin.manager.PaperPluginManagerImpl.callEvent(PaperPluginManagerImpl.java:131) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.plugin.SimplePluginManager.callEvent(SimplePluginManager.java:628) ~[leaves-api-1.21.8-R0.1-SNAPSHOT.jar:?]
+	at org.bukkit.event.Event.callEvent(Event.java:46) ~[leaves-api-1.21.8-R0.1-SNAPSHOT.jar:?]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.callEntityDamageEvent(CraftEventFactory.java:1079) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.callEntityDamageEvent(CraftEventFactory.java:1074) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.handleEntityDamageEvent(CraftEventFactory.java:1003) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.handleEntityDamageEvent(CraftEventFactory.java:960) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.handleLivingEntityDamageEvent(CraftEventFactory.java:1123) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.handleEntityDamage(LivingEntity.java:2410) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.hurtServer(LivingEntity.java:1473) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.animal.IronGolem.hurtServer(IronGolem.java:207) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Entity.lavaHurt(Entity.java:979) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.level.material.LavaFluid.lambda$entityInside$0(LavaFluid.java:137) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.InsideBlockEffectApplier$StepBasedCollector.applyAndClear(InsideBlockEffectApplier.java:61) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Entity.applyEffectsFromBlocks(Entity.java:1344) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Entity.applyEffectsFromBlocks(Entity.java:1304) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.aiStep(LivingEntity.java:3571) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Mob.aiStep(Mob.java:523) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.animal.IronGolem.aiStep(IronGolem.java:117) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.tick(LivingEntity.java:3291) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Mob.tick(Mob.java:384) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.level.ServerLevel.tickNonPassenger(ServerLevel.java:1302) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.level.ServerLevel.lambda$tick$4(ServerLevel.java:816) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.level.entity.EntityTickList.forEach(EntityTickList.java:39) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:795) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1727) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1533) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:1255) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:312) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+[09:41:05] [Craft Scheduler Thread - 12 - Vault/INFO]: [Vault] No new version available
+[09:41:05] [Server thread/ERROR]: Could not pass event EntityDamageByBlockEvent to GeminiCraftChat v1.0.8
+java.lang.NullPointerException: Cannot invoke "cn.ningmo.geminicraftchat.npc.NpcService.isEnabled()" because "this.npcManager" is null
+	at geminicraftchat-1.0.8.jar/cn.ningmo.geminicraftchat.listeners.NPCListener.onEntityDamage(NPCListener.java:74) ~[geminicraftchat-1.0.8.jar:?]
+	at org.bukkit.plugin.RegisteredListener.callEvent(RegisteredListener.java:71) ~[leaves-api-1.21.8-R0.1-SNAPSHOT.jar:?]
+	at io.papermc.paper.plugin.manager.PaperEventManager.callEvent(PaperEventManager.java:69) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at io.papermc.paper.plugin.manager.PaperPluginManagerImpl.callEvent(PaperPluginManagerImpl.java:131) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.plugin.SimplePluginManager.callEvent(SimplePluginManager.java:628) ~[leaves-api-1.21.8-R0.1-SNAPSHOT.jar:?]
+	at org.bukkit.event.Event.callEvent(Event.java:46) ~[leaves-api-1.21.8-R0.1-SNAPSHOT.jar:?]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.callEntityDamageEvent(CraftEventFactory.java:1079) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.callEntityDamageEvent(CraftEventFactory.java:1074) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.handleEntityDamageEvent(CraftEventFactory.java:1003) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.handleEntityDamageEvent(CraftEventFactory.java:960) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.handleLivingEntityDamageEvent(CraftEventFactory.java:1123) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.handleEntityDamage(LivingEntity.java:2410) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.hurtServer(LivingEntity.java:1473) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.animal.IronGolem.hurtServer(IronGolem.java:207) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Entity.lavaHurt(Entity.java:979) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.level.material.LavaFluid.lambda$entityInside$0(LavaFluid.java:137) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.InsideBlockEffectApplier$StepBasedCollector.applyAndClear(InsideBlockEffectApplier.java:61) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Entity.applyEffectsFromBlocks(Entity.java:1344) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Entity.applyEffectsFromBlocks(Entity.java:1304) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.aiStep(LivingEntity.java:3571) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Mob.aiStep(Mob.java:523) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.animal.IronGolem.aiStep(IronGolem.java:117) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.tick(LivingEntity.java:3291) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Mob.tick(Mob.java:384) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.level.ServerLevel.tickNonPassenger(ServerLevel.java:1302) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.level.ServerLevel.lambda$tick$4(ServerLevel.java:816) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.level.entity.EntityTickList.forEach(EntityTickList.java:39) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:795) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1727) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1533) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:1255) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:312) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+[09:41:05] [Craft Scheduler Thread - 7 - ISeeYou/INFO]: [ISeeYou] §a[INFO] §r您可能在使用测试版插件，最新正式版版本为 V1.3.6 ！
+[09:41:06] [Server thread/ERROR]: Could not pass event EntityDamageByBlockEvent to GeminiCraftChat v1.0.8
+java.lang.NullPointerException: Cannot invoke "cn.ningmo.geminicraftchat.npc.NpcService.isEnabled()" because "this.npcManager" is null
+	at geminicraftchat-1.0.8.jar/cn.ningmo.geminicraftchat.listeners.NPCListener.onEntityDamage(NPCListener.java:74) ~[geminicraftchat-1.0.8.jar:?]
+	at org.bukkit.plugin.RegisteredListener.callEvent(RegisteredListener.java:71) ~[leaves-api-1.21.8-R0.1-SNAPSHOT.jar:?]
+	at io.papermc.paper.plugin.manager.PaperEventManager.callEvent(PaperEventManager.java:69) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at io.papermc.paper.plugin.manager.PaperPluginManagerImpl.callEvent(PaperPluginManagerImpl.java:131) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.plugin.SimplePluginManager.callEvent(SimplePluginManager.java:628) ~[leaves-api-1.21.8-R0.1-SNAPSHOT.jar:?]
+	at org.bukkit.event.Event.callEvent(Event.java:46) ~[leaves-api-1.21.8-R0.1-SNAPSHOT.jar:?]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.callEntityDamageEvent(CraftEventFactory.java:1079) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.callEntityDamageEvent(CraftEventFactory.java:1074) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.handleEntityDamageEvent(CraftEventFactory.java:1003) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.handleEntityDamageEvent(CraftEventFactory.java:960) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.handleLivingEntityDamageEvent(CraftEventFactory.java:1123) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.handleEntityDamage(LivingEntity.java:2410) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.hurtServer(LivingEntity.java:1473) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.animal.IronGolem.hurtServer(IronGolem.java:207) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Entity.lavaHurt(Entity.java:979) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.level.material.LavaFluid.lambda$entityInside$0(LavaFluid.java:137) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.InsideBlockEffectApplier$StepBasedCollector.applyAndClear(InsideBlockEffectApplier.java:61) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Entity.applyEffectsFromBlocks(Entity.java:1344) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Entity.applyEffectsFromBlocks(Entity.java:1304) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.aiStep(LivingEntity.java:3571) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Mob.aiStep(Mob.java:523) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.animal.IronGolem.aiStep(IronGolem.java:117) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.tick(LivingEntity.java:3291) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Mob.tick(Mob.java:384) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.level.ServerLevel.tickNonPassenger(ServerLevel.java:1302) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.level.ServerLevel.lambda$tick$4(ServerLevel.java:816) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.level.entity.EntityTickList.forEach(EntityTickList.java:39) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:795) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1727) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1533) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:1255) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:312) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+[09:41:06] [Server thread/ERROR]: Could not pass event EntityDeathEvent to GeminiCraftChat v1.0.8
+java.lang.NullPointerException: Cannot invoke "cn.ningmo.geminicraftchat.npc.NpcService.isEnabled()" because "this.npcManager" is null
+	at geminicraftchat-1.0.8.jar/cn.ningmo.geminicraftchat.listeners.NPCListener.onEntityDeath(NPCListener.java:112) ~[geminicraftchat-1.0.8.jar:?]
+	at org.bukkit.plugin.RegisteredListener.callEvent(RegisteredListener.java:71) ~[leaves-api-1.21.8-R0.1-SNAPSHOT.jar:?]
+	at io.papermc.paper.plugin.manager.PaperEventManager.callEvent(PaperEventManager.java:69) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at io.papermc.paper.plugin.manager.PaperPluginManagerImpl.callEvent(PaperPluginManagerImpl.java:131) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at org.bukkit.plugin.SimplePluginManager.callEvent(SimplePluginManager.java:628) ~[leaves-api-1.21.8-R0.1-SNAPSHOT.jar:?]
+	at org.bukkit.craftbukkit.event.CraftEventFactory.callEntityDeathEvent(CraftEventFactory.java:867) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.dropAllDeathLoot(LivingEntity.java:1929) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.die(LivingEntity.java:1838) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.animal.IronGolem.die(IronGolem.java:300) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.hurtServer(LivingEntity.java:1536) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.animal.IronGolem.hurtServer(IronGolem.java:207) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Entity.lavaHurt(Entity.java:979) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.level.material.LavaFluid.lambda$entityInside$0(LavaFluid.java:137) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.InsideBlockEffectApplier$StepBasedCollector.applyAndClear(InsideBlockEffectApplier.java:61) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Entity.applyEffectsFromBlocks(Entity.java:1344) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Entity.applyEffectsFromBlocks(Entity.java:1304) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.aiStep(LivingEntity.java:3571) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Mob.aiStep(Mob.java:523) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.animal.IronGolem.aiStep(IronGolem.java:117) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.LivingEntity.tick(LivingEntity.java:3291) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.entity.Mob.tick(Mob.java:384) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.level.ServerLevel.tickNonPassenger(ServerLevel.java:1302) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.level.ServerLevel.lambda$tick$4(ServerLevel.java:816) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.world.level.entity.EntityTickList.forEach(EntityTickList.java:39) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:795) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1727) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1533) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:1255) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:312) ~[leaves-1.21.8.jar:1.21.8-91-956f022]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+[09:41:06] [Craft Scheduler Thread - 1 - Matrix/INFO]: [Matrix] Matrix AntiCheat has been fully initialized.
+[09:41:06] [Craft Scheduler Thread - 5 - Matrix/INFO]: You are using the latest version of Matrix! (v7.16.2)
+[09:41:09] [Craft Scheduler Thread - 12 - HuskHomes/INFO]: [HuskHomes] Registered 'after_load' hooks
+[09:42:00] [GCC-PerformanceMonitor/WARN]: [GeminiCraftChat] 内存使用过高 (4.0 GB)，启动自动调优
+[09:42:00] [GCC-PerformanceMonitor/INFO]: [GeminiCraftChat] 自动调优: 清理内存缓存
+[09:42:00] [GCC-PerformanceMonitor/ERROR]: [GeminiCraftChat] 内存使用严重过高，建议重启服务器
+[09:42:42] [Server thread/INFO]: 正在关闭服务器
+[09:42:42] [Server thread/INFO]: Stopping server
+[09:42:42] [Server thread/INFO]: [LuckBedrock] Disabling LuckBedrock v1.1
+[09:42:42] [Server thread/INFO]: [LuckBedrock] LuckBedrock is disabled.
+[09:42:42] [Server thread/INFO]: [AdvancedBanX] Disabling AdvancedBanX v3.1.0
+[09:42:42] [Server thread/INFO]: [AdvancedBanX] 
+
+[]=====[Disabling AdvancedBanX]=====[]
+| Information:
+|   Name: AdvancedBanX
+|   Developer: Leoko
+|   Maintainer & Updater: 2vY
+|   Version: 3.1.0
+|   Storage: HSQLDB (local)
+| Support:
+|   GitHub: https://github.com/hlpdev/AdvancedBanX/issues
+[]================================[]
+ 
+[09:42:42] [Server thread/INFO]: [FlyPlus] Disabling FlyPlus v3.4.1
+[09:42:42] [Server thread/INFO]: [InvSee++] Disabling InvSeePlusPlus v0.30.7
+[09:42:42] [Server thread/INFO]: [ISeeYou] Disabling ISeeYou v1.3.9
+[09:42:42] [Server thread/INFO]: [EasyBot] Disabling EasyBot v2.0.7
+[09:42:42] [Server thread/INFO]: [EasyBot] 连接关闭: Disconnected
+[09:42:47] [Server thread/WARN]: [EasyBot] 正在尝试重连服务器
+[09:42:47] [pool-34-thread-1/INFO]: [EasyBot] 正在连接到服务器: ws://47.107.162.240:26990/bridge
+[09:42:47] [pool-34-thread-1/ERROR]: [EasyBot] 连接失败: null
+[09:42:47] [Server thread/INFO]: [FarmControl] Disabling FarmControl v1.3.0
+[09:42:47] [Server thread/INFO]: [FastAsyncWorldEdit] Disabling FastAsyncWorldEdit v2.13.2-SNAPSHOT-1157;4165498
+[09:42:47] [Server thread/INFO]: Unregistering com.sk89q.worldedit.bukkit.BukkitServerInterface from WorldEdit
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] Disabling GeminiCraftChat v1.0.8
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] [DEBUG] 基础客户端已关闭
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] [DEBUG] GeminiService已关闭
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] === 性能监控最终报告 ===
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] 总运行时间: 107 秒
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] 总API调用: 0 次
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] 平均响应时间: 0 ms
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] 峰值内存使用: 4.0 GB
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] 当前内存使用: 704.0 MB (9.2%)
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] 日志统计 - 总数: 0, 丢弃: 0, 队列: 4
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] NPC统计 - 总更新: 0, 活跃NPC: 0/2
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] ========================
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] 性能监控已停止
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] 智能NPC管理器已关闭 - 总更新次数: 0
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] 处理剩余的 4 条日志
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] 异步日志系统已停止 - 总日志: 0, 丢弃日志: 0
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] bStats统计已关闭
+[09:42:47] [Server thread/INFO]: [GeminiCraftChat] GeminiCraftChat 插件已停用
+[09:42:47] [Server thread/INFO]: [LiteSignIn] Disabling LiteSignIn v1.8.7.0
+[09:42:47] [Server thread/INFO]: [PlaceholderAPI] Unregistered placeholder expansion litesignin
+[09:42:47] [Server thread/INFO]: [PlaceholderAPI] Reason: required plugin LiteSignIn was disabled.
+[09:42:47] [Server thread/INFO]: LiteSignIn >>> 异步线程已停止
+[09:42:47] [Server thread/INFO]: LiteSignIn >>> 已断开 SQLite 数据库的连接。
+[09:42:47] [Server thread/INFO]: [EvenMoreFish] Disabling EvenMoreFish v2.0.9
+[09:42:47] [Server thread/INFO]: [EvenMoreFish] EvenMoreFish by Oheers : Disabled
+[09:42:47] [Server thread/INFO]: [CMILib] Disabling CMILib v1.5.6.2
+[09:42:47] [Server thread/INFO]: [Hurricane] Disabling Hurricane v2.1-SNAPSHOT
+[09:42:47] [Server thread/INFO]: [QuickShopForm] Disabling QuickShopForm v2.1.5
+[09:42:47] [Server thread/INFO]: [HuskHomesForm] Disabling HuskHomesForm v1.0.4
+[09:42:47] [Server thread/INFO]: [HuskHomesForm] HuskHomesForm 已禁用!
+[09:42:47] [Server thread/INFO]: [EconomyShopGUI] Disabling EconomyShopGUI v6.14.4
+[09:42:47] [Server thread/INFO]: [ChunkyBorder] Disabling ChunkyBorder v1.2.23
+[09:42:47] [Server thread/INFO]: [Dominion] Disabling Dominion v4.5.0-beta
+[09:42:47] [Server thread/INFO]: [XConomy] Disabling XConomy v2.26.3
+[09:42:47] [Server thread/INFO]: [XConomy] XConomy已成功卸载
+[09:42:47] [Server thread/INFO]: [MiniMOTD] Disabling MiniMOTD v2.1.8
+[09:42:47] [Server thread/INFO]: [ESU] Disabling ESU v0.8.1
+[09:42:47] [Server thread/INFO]: [com.zaxxer.hikari.HikariDataSource] ESU-HikariPool - Shutdown initiated...
+[09:42:47] [Server thread/INFO]: [com.zaxxer.hikari.HikariDataSource] ESU-HikariPool - Shutdown completed.
+[09:42:47] [Server thread/INFO]: [GeyserExtras] Disabling GeyserExtras v2.0.0
+[09:42:48] [Server thread/INFO]: [TAB] Disabling TAB v5.2.5
+[09:42:48] [Server thread/INFO]: [TAB] Disabled in 0ms
+[09:42:48] [Server thread/INFO]: [Matrix] Disabling Matrix v7.16.2
+[09:42:48] [Server thread/INFO]: [Matrix] Disabled Matrix AntiCheat.
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Disabling QuickShop-Hikari v6.2.0.10
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] QuickShop-Hikari - Bootstrap -> Execute the shutdown sequence
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] QuickShop is finishing remaining work, this may need a while...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Shutting down error reporter...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Unregistering PlaceHolderAPI hooks...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Successfully unregistered PlaceholderAPI hook!
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Unloading all loaded shops...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Stopping shop auto save...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Saving all in-memory changed shops...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Cleaning up shop manager...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Unloading loaded shops...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Saving shops, please allow up to 30 seconds for flush changes into database...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Cleaning up display manager...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Stopping log watcher...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Shutting down scheduled timers...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Shutting down event calendar watcher...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Shutting down update watcher...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Shutting down 3rd-party integrations...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Unload PlaceHolderAPI module successfully!
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari] Shutting down database connections...
+[09:42:48] [Server thread/INFO]: [cc.carm.lib.easysql.hikari.HikariDataSource] HikariPool-1 - Shutdown initiated...
+[09:42:48] [Server thread/INFO]: [cc.carm.lib.easysql.hikari.HikariDataSource] HikariPool-1 - Shutdown completed.
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] Cleaning up resources...
+[09:42:48] [Server thread/INFO]: [QuickShop-Hikari/Bootstrap] QuickShop-Hikari - Bootstrap -> All Complete (50ms)
+[09:42:48] [Server thread/INFO]: [HuskHomes] Disabling HuskHomes v4.9.9
+[09:42:48] [Server thread/INFO]: [HuskHomes] Disabling HuskHomes v4.9.9...
+[09:42:48] [Server thread/INFO]: [HuskHomes] Successfully disabled HuskHomes v4.9.9
+[09:42:48] [Server thread/INFO]: [Chunky] Disabling Chunky v1.4.40
+[09:42:48] [Server thread/INFO]: [packetevents] Disabling packetevents v2.9.5+24bf010d9-SNAPSHOT
+[09:42:48] [Server thread/INFO]: [PlaceholderAPI] Disabling PlaceholderAPI v2.11.6
+[09:42:48] [Server thread/INFO]: [Vault] Disabling Vault v1.7.3-b131
+[09:42:48] [Server thread/INFO]: [ProtocolLib] Disabling ProtocolLib v5.4.0
+[09:42:48] [Server thread/INFO]: [Geyser-Spigot] Disabling Geyser-Spigot v2.8.3-SNAPSHOT
+[09:42:48] [Server thread/INFO]: [Geyser-Spigot] Geyser 关闭成功。
+[09:42:48] [Server thread/INFO]: [LuckPerms] Disabling LuckPerms v5.5.10
+[09:42:48] [Server thread/INFO]: [LuckPerms] Starting shutdown process...
+[09:42:48] [Server thread/INFO]: [LuckPerms] Closing storage...
+[09:42:48] [Server thread/INFO]: [LuckPerms] Goodbye!
+[09:42:48] [Server thread/INFO]: [floodgate] Disabling floodgate v2.2.4-SNAPSHOT (b118-40d320a)
+[09:42:48] [Server thread/INFO]: Saving players
+[09:42:48] [Server thread/INFO]: Saving worlds
+[09:42:48] [Server thread/INFO]: Saving chunks for level 'ServerLevel[ad-ThirdSeason]'/minecraft:overworld
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'ad-ThirdSeason'
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'ad-ThirdSeason'
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'ad-ThirdSeason'
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Saved 49 block chunks, 49 entity chunks, 1 poi chunks in world 'ad-ThirdSeason' in 0.07s
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'ad-ThirdSeason'
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'ad-ThirdSeason'
+[09:42:48] [Server thread/INFO]: Saving chunks for level 'ServerLevel[ad-ThirdSeason_nether]'/minecraft:the_nether
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'ad-ThirdSeason_nether'
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'ad-ThirdSeason_nether'
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'ad-ThirdSeason_nether'
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Saved 49 block chunks, 49 entity chunks, 0 poi chunks in world 'ad-ThirdSeason_nether' in 0.06s
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'ad-ThirdSeason_nether'
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'ad-ThirdSeason_nether'
+[09:42:48] [Server thread/INFO]: Saving chunks for level 'ServerLevel[ad-ThirdSeason_the_end]'/minecraft:the_end
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'ad-ThirdSeason_the_end'
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'ad-ThirdSeason_the_end'
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'ad-ThirdSeason_the_end'
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Saved 49 block chunks, 49 entity chunks, 0 poi chunks in world 'ad-ThirdSeason_the_end' in 0.03s
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'ad-ThirdSeason_the_end'
+[09:42:48] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'ad-ThirdSeason_the_end'
+[09:42:48] [Server thread/INFO]: ThreadedChunkStorage (ad-ThirdSeason): All chunks are saved
+[09:42:48] [Server thread/INFO]: ThreadedChunkStorage (DIM-1): All chunks are saved
+[09:42:48] [Server thread/INFO]: ThreadedChunkStorage (DIM1): All chunks are saved
+[09:42:48] [Server thread/INFO]: ThreadedChunkStorage: All dimensions are saved
+[09:42:48] [Server thread/INFO]: Waiting for all RegionFile I/O tasks to complete...
+[09:42:48] [Server thread/INFO]: All RegionFile I/O tasks to complete
+[09:42:48] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of worker pool for up to 60s...
+[09:42:48] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of I/O pool for up to 60s...

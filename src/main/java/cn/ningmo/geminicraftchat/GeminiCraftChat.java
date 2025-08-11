@@ -123,11 +123,17 @@ public class GeminiCraftChat extends JavaPlugin {
 
         // 初始化异步日志管理器
         try {
-            this.asyncLogManager = new AsyncLogManager(this);
-            this.asyncLogManager.start();
-            pluginLogger.info("异步日志管理器初始化成功");
+            boolean asyncLoggingEnabled = configManager.getConfig().getBoolean("performance.async_logging", true);
+            if (asyncLoggingEnabled) {
+                this.asyncLogManager = new AsyncLogManager(this);
+                this.asyncLogManager.start();
+                pluginLogger.info("异步日志管理器初始化成功");
+            } else {
+                pluginLogger.info("异步日志已禁用，使用传统日志系统");
+            }
         } catch (Exception e) {
             pluginLogger.warning("异步日志管理器初始化失败: " + e.getMessage());
+            pluginLogger.warning("将使用传统日志系统");
         }
 
         // 初始化性能监控

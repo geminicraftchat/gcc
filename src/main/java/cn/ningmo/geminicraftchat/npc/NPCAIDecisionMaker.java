@@ -86,7 +86,8 @@ public class NPCAIDecisionMaker {
     public NPCAIDecisionMaker(GeminiCraftChat plugin) {
         this.plugin = plugin;
         this.configManager = plugin.getConfigManager();
-        this.geminiService = new GeminiService(plugin);
+        // 使用ChatManager中的GeminiService实例，避免重复创建
+        this.geminiService = plugin.getChatManager().getGeminiService();
         this.random = new Random();
     }
     
