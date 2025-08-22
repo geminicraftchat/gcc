@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * AI控制的NPC实体
@@ -23,12 +26,12 @@ public class AIControlledNPC {
     private final Location spawnLocation;
     private final NPCBehaviorConfig behaviorConfig;
     
-    private LivingEntity entity;
-    private boolean isActive;
-    private long lastActionTime;
-    private NPCState currentState;
-    private Location targetLocation;
-    private Player currentTarget;
+    private volatile LivingEntity entity;
+    private final AtomicBoolean isActive;
+    private final AtomicLong lastActionTime;
+    private final AtomicReference<NPCState> currentState;
+    private volatile Location targetLocation;
+    private volatile Player currentTarget;
     
     // 对话历史 - 每个玩家独立的对话记录
     private final Map<UUID, List<String>> conversationHistory;
@@ -57,9 +60,9 @@ public class AIControlledNPC {
         this.spawnLocation = spawnLocation.clone();
         this.behaviorConfig = behaviorConfig;
         this.conversationHistory = new ConcurrentHashMap<>();
-        this.currentState = NPCState.IDLE;
-        this.isActive = false;
-        this.lastActionTime = System.currentTimeMillis();
+        this.currentState = new AtomicReference<>(NPCState.IDLE);
+        this.isActive = new AtomicBoolean(false);
+        this.lastActionTime = new AtomicLong(System.currentTimeMillis());
     }
     
     // Getters
@@ -71,20 +74,32 @@ public class AIControlledNPC {
     public Location getSpawnLocation() { return spawnLocation; }
     public NPCBehaviorConfig getBehaviorConfig() { return behaviorConfig; }
     public LivingEntity getEntity() { return entity; }
-    public boolean isActive() { return isActive; }
-    public NPCState getCurrentState() { return currentState; }
+    public boolean isActive() { return isActive.get(); }
+    public NPCState getCurrentState() { return currentState.get(); }
     public Location getTargetLocation() { return targetLocation; }
     public Player getCurrentTarget() { return currentTarget; }
+    public long getLastActionTime() { return lastActionTime.get(); }
     
     // Setters
     public void setEntity(LivingEntity entity) { this.entity = entity; }
-    public void setActive(boolean active) { this.isActive = active; }
+    public void setActive(boolean active) { this.isActive.set(active); }
     public void setCurrentState(NPCState state) { 
-        this.currentState = state;
-        this.lastActionTime = System.currentTimeMillis();
+        this.currentState.set(state);
+        this.lastActionTime.set(System.currentTimeMillis());
     }
     public void setTargetLocation(Location location) { this.targetLocation = location; }
     public void setCurrentTarget(Player player) { this.currentTarget = player; }
+    
+    /**
+     * 原子性地更新状态和时间戳
+     */
+    public boolean compareAndSetState(NPCState expected, NPCState newState) {
+        boolean success = this.currentState.compareAndSet(expected, newState);
+        if (success) {
+            this.lastActionTime.set(System.currentTimeMillis());
+        }
+        return success;
+    }
     
     /**
      * 获取玩家的对话历史
@@ -94,16 +109,22 @@ public class AIControlledNPC {
     }
     
     /**
-     * 添加对话记录
+     * 添加对话记录（线程安全）
      */
     public void addConversationHistory(UUID playerId, String message) {
-        conversationHistory.computeIfAbsent(playerId, k -> new java.util.ArrayList<>()).add(message);
+        conversationHistory.computeIfAbsent(playerId, k -> new java.util.concurrent.CopyOnWriteArrayList<>()).add(message);
         
         // 限制历史记录长度
         List<String> history = conversationHistory.get(playerId);
-        if (history.size() > behaviorConfig.getMaxConversationHistory()) {
+        int maxHistory = behaviorConfig.getMaxConversationHistory();
+        
+        // 如果超过限制，保留最新的记录
+        while (history.size() > maxHistory) {
             history.remove(0);
         }
+        
+        // 记录最后活动时间用于清理
+        lastActionTime.set(System.currentTimeMillis());
     }
     
     /**
@@ -114,11 +135,49 @@ public class AIControlledNPC {
     }
     
     /**
+     * 清理过期的对话历史
+     */
+    public void cleanupExpiredConversations(long maxIdleTime) {
+        long currentTime = System.currentTimeMillis();
+        long lastActivity = lastActionTime.get();
+        
+        // 如果NPC长时间未活动，清理所有对话历史
+        if (currentTime - lastActivity > maxIdleTime) {
+            conversationHistory.clear();
+            return;
+        }
+        
+        // 清理空的对话历史
+        conversationHistory.entrySet().removeIf(entry -> 
+            entry.getValue() == null || entry.getValue().isEmpty());
+    }
+    
+    /**
+     * 获取内存使用统计
+     */
+    public int getMemoryUsage() {
+        int totalMessages = 0;
+        for (List<String> history : conversationHistory.values()) {
+            if (history != null) {
+                totalMessages += history.size();
+            }
+        }
+        return totalMessages;
+    }
+    
+    /**
+     * 获取活跃玩家数量
+     */
+    public int getActivePlayerCount() {
+        return conversationHistory.size();
+    }
+    
+    /**
      * 检查是否需要执行AI决策
      */
     public boolean shouldMakeDecision() {
         long currentTime = System.currentTimeMillis();
-        return currentTime - lastActionTime >= behaviorConfig.getDecisionInterval();
+        return currentTime - lastActionTime.get() >= behaviorConfig.getDecisionInterval();
     }
     
     /**

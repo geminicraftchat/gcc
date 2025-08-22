@@ -32,8 +32,13 @@ public class SmartNPCManager implements NpcService {
     // 智能调度相关
     private final ScheduledExecutorService smartScheduler;
     private final ExecutorService npcProcessor;
+    private final ExecutorService aiRequestProcessor; // 专门处理AI请求的线程池
     private BukkitTask mainThreadTask;
     private boolean enabled;
+    
+    // 线程池监控
+    private final AtomicInteger activeThreads;
+    private final AtomicInteger queuedTasks;
     
     // 性能配置
     private final int maxActiveNPCs;
@@ -70,26 +75,52 @@ public class SmartNPCManager implements NpcService {
         this.activeUpdateInterval = npcConfig != null ? npcConfig.getLong("update_interval_active", 20) : 20;
         this.inactiveUpdateInterval = npcConfig != null ? npcConfig.getLong("update_interval_inactive", 100) : 100;
         
-        // 初始化异步组件
+        // 初始化异步组件 - 动态线程池配置
+        int coreThreads = Math.max(2, Runtime.getRuntime().availableProcessors() / 4);
+        int maxThreads = Math.max(4, Runtime.getRuntime().availableProcessors() / 2);
+        int aiThreads = Math.max(1, Runtime.getRuntime().availableProcessors() / 8);
+        
         this.smartScheduler = Executors.newScheduledThreadPool(2, r -> {
-            Thread thread = new Thread(r, "GCC-SmartNPC-" + System.currentTimeMillis());
+            Thread thread = new Thread(r, "GCC-SmartNPC-Scheduler-" + System.currentTimeMillis());
             thread.setDaemon(true);
+            thread.setPriority(Thread.NORM_PRIORITY - 1);
             return thread;
         });
         
-        this.npcProcessor = Executors.newFixedThreadPool(
-            Math.max(2, Runtime.getRuntime().availableProcessors() / 2),
+        // 使用ThreadPoolExecutor实现动态线程池
+        this.npcProcessor = new ThreadPoolExecutor(
+            coreThreads, maxThreads,
+            60L, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(100), // 限制队列大小防止内存溢出
             r -> {
                 Thread thread = new Thread(r, "GCC-NPCProcessor-" + System.currentTimeMillis());
                 thread.setDaemon(true);
+                thread.setPriority(Thread.NORM_PRIORITY);
                 return thread;
-            }
+            },
+            new ThreadPoolExecutor.CallerRunsPolicy() // 队列满时在调用线程执行
         );
         
-        // 初始化统计
+        // AI请求专用线程池，避免阻塞NPC更新
+        this.aiRequestProcessor = new ThreadPoolExecutor(
+            aiThreads, aiThreads * 2,
+            120L, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(50),
+            r -> {
+                Thread thread = new Thread(r, "GCC-AIRequest-" + System.currentTimeMillis());
+                thread.setDaemon(true);
+                thread.setPriority(Thread.NORM_PRIORITY - 2);
+                return thread;
+            },
+            new ThreadPoolExecutor.DiscardOldestPolicy() // AI请求可以丢弃旧的
+        );
+        
+        // 初始化统计和监控
         this.totalUpdates = new AtomicLong(0);
         this.avgUpdateTime = new AtomicLong(0);
         this.currentActiveNPCs = new AtomicInteger(0);
+        this.activeThreads = new AtomicInteger(0);
+        this.queuedTasks = new AtomicInteger(0);
         this.npcUpdateCache = new ConcurrentHashMap<>();
         
         this.enabled = false;
@@ -126,19 +157,10 @@ public class SmartNPCManager implements NpcService {
             mainThreadTask.cancel();
         }
         
-        smartScheduler.shutdown();
-        npcProcessor.shutdown();
-        
-        try {
-            if (!smartScheduler.awaitTermination(5, TimeUnit.SECONDS)) {
-                smartScheduler.shutdownNow();
-            }
-            if (!npcProcessor.awaitTermination(5, TimeUnit.SECONDS)) {
-                npcProcessor.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        // 关闭线程池
+        shutdownExecutorService(smartScheduler, "SmartScheduler");
+        shutdownExecutorService(npcProcessor, "NPCProcessor");
+        shutdownExecutorService(aiRequestProcessor, "AIRequestProcessor");
         
         // 移除所有NPC实体
         for (AIControlledNPC npc : npcs.values()) {
@@ -152,6 +174,25 @@ public class SmartNPCManager implements NpcService {
         npcUpdateCache.clear();
         
         plugin.getLogger().info("智能NPC管理器已关闭 - 总更新次数: " + totalUpdates.get());
+    }
+    
+    private void shutdownExecutorService(ExecutorService executor, String name) {
+        if (executor != null && !executor.isShutdown()) {
+            executor.shutdown();
+            try {
+                if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                    plugin.getLogger().warning(name + " 线程池未能在5秒内正常关闭，强制关闭");
+                    executor.shutdownNow();
+                    if (!executor.awaitTermination(2, TimeUnit.SECONDS)) {
+                        plugin.getLogger().severe(name + " 线程池强制关闭失败");
+                    }
+                }
+            } catch (InterruptedException e) {
+                plugin.getLogger().warning(name + " 线程池关闭被中断，强制关闭");
+                executor.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+        }
     }
     
     /**
@@ -203,11 +244,42 @@ public class SmartNPCManager implements NpcService {
             return;
         }
         
+        // 检查线程池状态
+        if (npcProcessor.isShutdown() || npcProcessor.isTerminated()) {
+            plugin.getLogger().warning("NPC处理线程池已关闭，跳过活跃NPC更新");
+            return;
+        }
+        
+        // 更新队列任务计数
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) npcProcessor;
+        queuedTasks.set(executor.getQueue().size());
+        activeThreads.set(executor.getActiveCount());
+        
+        // 如果队列过满，跳过本次更新
+        if (executor.getQueue().size() > 80) {
+            plugin.getLogger().warning("NPC处理队列过满(" + executor.getQueue().size() + ")，跳过本次活跃NPC更新");
+            return;
+        }
+        
         // 分批处理活跃NPC
         List<List<AIControlledNPC>> batches = partitionList(activeNPCs, batchSize);
         
         List<CompletableFuture<Void>> futures = batches.stream()
-            .map(batch -> CompletableFuture.runAsync(() -> processBatch(batch, true), npcProcessor))
+            .map(batch -> CompletableFuture.runAsync(() -> {
+                try {
+                    processBatch(batch, true);
+                } catch (Exception e) {
+                    plugin.getLogger().severe("处理活跃NPC批次时发生未捕获异常: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }, npcProcessor)
+            .exceptionally(throwable -> {
+                plugin.getLogger().severe("活跃NPC批次处理失败: " + throwable.getMessage());
+                if (throwable.getCause() != null) {
+                    plugin.getLogger().severe("根本原因: " + throwable.getCause().getMessage());
+                }
+                return null;
+            }))
             .collect(Collectors.toList());
         
         // 等待所有批次完成（非阻塞）
@@ -215,6 +287,10 @@ public class SmartNPCManager implements NpcService {
             .thenRun(() -> {
                 long updateTime = System.currentTimeMillis() - startTime;
                 updateStats(activeNPCs.size(), updateTime);
+            })
+            .exceptionally(throwable -> {
+                plugin.getLogger().severe("活跃NPC更新完成时发生错误: " + throwable.getMessage());
+                return null;
             });
     }
     
@@ -379,6 +455,23 @@ public class SmartNPCManager implements NpcService {
         npcUpdateCache.entrySet().removeIf(entry -> 
             currentTime - entry.getValue().lastUpdate > 600000); // 10分钟
         
+        // 清理AI决策器资源
+        if (aiDecisionMaker != null) {
+            aiDecisionMaker.performMaintenance();
+            
+            // 记录AI请求性能统计
+            String aiStats = aiDecisionMaker.getPerformanceStats();
+            plugin.getLogger().info("AI性能统计: " + aiStats);
+            
+            // 检查系统过载状态
+            if (aiDecisionMaker.isSystemOverloaded()) {
+                plugin.getLogger().warning("AI系统过载！所有请求槽位已满，考虑增加maxConcurrentAIRequests配置");
+            }
+        }
+        
+        // 清理NPC对话历史
+        cleanupNPCConversations();
+        
         // 内存优化（可配置）
         if (configManager.getConfig().getBoolean("performance.allow_explicit_gc", false)) {
             System.gc();
@@ -386,6 +479,36 @@ public class SmartNPCManager implements NpcService {
         
         plugin.getLogger().info("NPC维护完成 - 活跃NPC: " + currentActiveNPCs.get() + 
             ", 缓存大小: " + npcUpdateCache.size() + ", 总更新: " + totalUpdates.get());
+    }
+    
+    /**
+     * 清理NPC对话历史
+     */
+    private void cleanupNPCConversations() {
+        long maxIdleTime = 1800000; // 30分钟
+        int totalMemoryUsage = 0;
+        int totalActivePlayers = 0;
+        int cleanedNPCs = 0;
+        
+        for (AIControlledNPC npc : npcs.values()) {
+            if (npc != null) {
+                int beforeMemory = npc.getMemoryUsage();
+                npc.cleanupExpiredConversations(maxIdleTime);
+                int afterMemory = npc.getMemoryUsage();
+                
+                if (beforeMemory > afterMemory) {
+                    cleanedNPCs++;
+                }
+                
+                totalMemoryUsage += afterMemory;
+                totalActivePlayers += npc.getActivePlayerCount();
+            }
+        }
+        
+        if (cleanedNPCs > 0) {
+            plugin.getLogger().info("清理了 " + cleanedNPCs + " 个NPC的对话历史，" +
+                "总消息数: " + totalMemoryUsage + ", 活跃玩家: " + totalActivePlayers);
+        }
     }
     
     /**

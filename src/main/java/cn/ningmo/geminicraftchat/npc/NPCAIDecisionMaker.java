@@ -11,6 +11,12 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.Semaphore;
 
 /**
  * NPC AI决策制定器
@@ -21,6 +27,19 @@ public class NPCAIDecisionMaker {
     private final ConfigManager configManager;
     private final GeminiService geminiService;
     private final Random random;
+    
+    // 线程安全的NPC状态管理
+    private final Map<String, ReentrantLock> npcLocks;
+    private final Map<String, AtomicBoolean> npcProcessing;
+    private final Map<String, Long> lastDecisionTime;
+    
+    // 性能监控和限流
+    private final AtomicInteger activeAIRequests;
+    private final AtomicLong totalAIRequests;
+    private final AtomicLong failedAIRequests;
+    private final Semaphore aiRequestSemaphore;
+    private final int maxConcurrentAIRequests;
+    private final long requestTimeoutMs;
     
     // AI提示词模板
     private static final String MOVEMENT_DECISION_PROMPT = """
@@ -89,48 +108,116 @@ public class NPCAIDecisionMaker {
         // 使用ChatManager中的GeminiService实例，避免重复创建
         this.geminiService = plugin.getChatManager().getGeminiService();
         this.random = new Random();
+        
+        // 初始化线程安全组件
+        this.npcLocks = new ConcurrentHashMap<>();
+        this.npcProcessing = new ConcurrentHashMap<>();
+        this.lastDecisionTime = new ConcurrentHashMap<>();
+        
+        // 初始化性能监控和限流组件
+        this.activeAIRequests = new AtomicInteger(0);
+        this.totalAIRequests = new AtomicLong(0);
+        this.failedAIRequests = new AtomicLong(0);
+        this.maxConcurrentAIRequests = configManager.getConfig().getInt("npc.ai.max-concurrent-requests", 5);
+        this.requestTimeoutMs = configManager.getConfig().getLong("npc.ai.request-timeout-ms", 10000);
+        this.aiRequestSemaphore = new Semaphore(maxConcurrentAIRequests, true);
     }
     
     /**
-     * 为NPC做出决策
+     * 为NPC做出决策（线程安全版本）
      */
     public void makeDecision(AIControlledNPC npc) {
         if (!npc.isActive() || npc.getEntity() == null) return;
         
-        // 如果正在对话中，不做移动决策
-        if (npc.getCurrentState() == AIControlledNPC.NPCState.TALKING) {
-            return;
+        String npcId = npc.getNpcId();
+        
+        // 检查是否正在处理中
+        AtomicBoolean processing = npcProcessing.computeIfAbsent(npcId, k -> new AtomicBoolean(false));
+        if (!processing.compareAndSet(false, true)) {
+            return; // 已经在处理中，跳过
         }
         
-        // 构建决策提示词
-        String prompt = buildMovementPrompt(npc);
-        
-        // 创建一个虚拟玩家ID用于NPC决策
-        String npcPlayerId = "npc_" + npc.getNpcId();
-
-        // 获取NPC的人设
-        Optional<Persona> persona = getPersonaForNPC(npc);
-
-        // 调用真实AI服务
-        CompletableFuture<String> future = geminiService.sendMessage(
-            npcPlayerId,
-            prompt,
-            getPersonaForNPC(npc)
-        );
-        
-        future.thenAccept(response -> {
-            try {
-                parseAndExecuteDecision(npc, response);
-            } catch (Exception e) {
-                plugin.debug("解析NPC决策失败: " + e.getMessage());
-                // 使用默认行为
-                executeDefaultBehavior(npc);
+        try {
+            // 检查决策间隔
+            Long lastTime = lastDecisionTime.get(npcId);
+            long currentTime = System.currentTimeMillis();
+            if (lastTime != null && (currentTime - lastTime) < 3000) { // 3秒间隔
+                return;
             }
-        }).exceptionally(throwable -> {
-            plugin.debug("NPC AI决策请求失败: " + throwable.getMessage());
-            executeDefaultBehavior(npc);
-            return null;
-        });
+            
+            // 如果正在对话中，不做移动决策
+            if (npc.getCurrentState() == AIControlledNPC.NPCState.TALKING) {
+                return;
+            }
+            
+            // 更新最后决策时间
+            lastDecisionTime.put(npcId, currentTime);
+            
+            // 检查AI请求限流
+            if (!aiRequestSemaphore.tryAcquire()) {
+                plugin.debug("NPC " + npcId + " AI请求被限流，当前活跃请求: " + activeAIRequests.get());
+                processing.set(false);
+                return;
+            }
+            
+            // 增加活跃请求计数
+            activeAIRequests.incrementAndGet();
+            totalAIRequests.incrementAndGet();
+            
+            // 构建决策提示词
+            String prompt = buildMovementPrompt(npc);
+            
+            // 创建一个虚拟玩家ID用于NPC决策
+            String npcPlayerId = "npc_" + npc.getNpcId();
+
+            // 调用真实AI服务
+            CompletableFuture<String> future = geminiService.sendMessage(
+                npcPlayerId,
+                prompt,
+                getPersonaForNPC(npc)
+            );
+            
+            future.thenAccept(response -> {
+                // 在主线程中执行决策
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    ReentrantLock lock = npcLocks.computeIfAbsent(npcId, k -> new ReentrantLock());
+                    lock.lock();
+                    try {
+                        // 再次检查NPC状态
+                        if (npc.isActive() && npc.getEntity() != null) {
+                            parseAndExecuteDecision(npc, response);
+                        }
+                    } catch (Exception e) {
+                        plugin.debug("NPC决策执行失败: " + e.getMessage());
+                        executeDefaultBehavior(npc);
+                        failedAIRequests.incrementAndGet();
+                    } finally {
+                        lock.unlock();
+                        processing.set(false);
+                        activeAIRequests.decrementAndGet();
+                        aiRequestSemaphore.release();
+                    }
+                });
+            }).exceptionally(throwable -> {
+                plugin.debug("NPC决策AI请求失败: " + throwable.getMessage());
+                failedAIRequests.incrementAndGet();
+                // 在主线程中执行默认行为
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    try {
+                        executeDefaultBehavior(npc);
+                    } finally {
+                        processing.set(false);
+                        activeAIRequests.decrementAndGet();
+                        aiRequestSemaphore.release();
+                    }
+                });
+                return null;
+            });
+            
+        } catch (Exception e) {
+            plugin.debug("NPC决策准备失败: " + e.getMessage());
+            processing.set(false);
+        }
     }
     
     /**
@@ -202,12 +289,19 @@ public class NPCAIDecisionMaker {
     private void executeDecision(AIControlledNPC npc, String action, String direction, String reason) {
         plugin.debug("NPC " + npc.getDisplayName() + " 决定: " + action + " 方向: " + direction + " 原因: " + reason);
         
-        // 设置NPC状态
+        // 设置NPC状态（线程安全）
         try {
             AIControlledNPC.NPCState newState = AIControlledNPC.NPCState.valueOf(action);
-            npc.setCurrentState(newState);
+            AIControlledNPC.NPCState currentState = npc.getCurrentState();
+            
+            // 使用compareAndSet确保状态更新的原子性
+            if (!npc.compareAndSetState(currentState, newState)) {
+                plugin.debug("NPC " + npc.getNpcId() + " 状态更新失败，可能被其他线程修改");
+                return; // 如果状态已被其他线程修改，则跳过此次决策
+            }
         } catch (IllegalArgumentException e) {
-            npc.setCurrentState(AIControlledNPC.NPCState.IDLE);
+            AIControlledNPC.NPCState currentState = npc.getCurrentState();
+            npc.compareAndSetState(currentState, AIControlledNPC.NPCState.IDLE);
         }
         
         // 计算移动目标
@@ -524,41 +618,120 @@ public class NPCAIDecisionMaker {
      * 处理对话
      */
     public void handleConversation(AIControlledNPC npc, Player player, String message) {
-        // 构建对话提示词
-        String prompt = buildConversationPrompt(npc, player, message);
+        String npcId = npc.getNpcId();
         
-        // 使用ChatManager处理对话
-        // 创建一个唯一的对话ID
-        String conversationId = "npc_" + npc.getNpcId() + "_" + player.getUniqueId();
+        // 检查是否正在处理对话
+        AtomicBoolean processing = npcProcessing.computeIfAbsent(npcId + "_conv", k -> new AtomicBoolean(false));
+        if (!processing.compareAndSet(false, true)) {
+            player.sendMessage("§e" + npc.getDisplayName() + "§f: 请稍等，我还在思考上一个问题...");
+            return;
+        }
+        
+        try {
+            // 设置NPC状态为对话中
+            ReentrantLock lock = npcLocks.computeIfAbsent(npcId, k -> new ReentrantLock());
+            lock.lock();
+            try {
+                npc.setCurrentState(AIControlledNPC.NPCState.TALKING);
+                npc.setCurrentTarget(player.getLocation());
+            } finally {
+                lock.unlock();
+            }
+            
+            // 检查AI请求限流
+            if (!aiRequestSemaphore.tryAcquire()) {
+                player.sendMessage("§e" + npc.getDisplayName() + "§f: 请稍等，我还在思考上一个问题...");
+                processing.set(false);
+                return;
+            }
+            
+            // 增加活跃请求计数
+            activeAIRequests.incrementAndGet();
+            totalAIRequests.incrementAndGet();
+            
+            // 构建对话提示词
+            String prompt = buildConversationPrompt(npc, player, message);
+            
+            // 创建一个唯一的对话ID
+            String conversationId = "npc_" + npcId + "_" + player.getUniqueId();
 
-        // 调用真实AI服务
-        CompletableFuture<String> future = geminiService.sendMessage(
-            conversationId,
-            prompt,
-            getPersonaForNPC(npc)
-        );
-        
-        future.thenAccept(response -> {
-            // 发送回复给玩家（主线程）
-            Bukkit.getScheduler().runTask(plugin, () -> player.sendMessage("§e" + npc.getDisplayName() + "§f: " + response));
+            // 调用真实AI服务
+            CompletableFuture<String> future = geminiService.sendMessage(
+                conversationId,
+                prompt,
+                getPersonaForNPC(npc)
+            );
             
-            // 记录对话历史
-            npc.addConversationHistory(player.getUniqueId(), "玩家: " + message);
-            npc.addConversationHistory(player.getUniqueId(), "NPC: " + response);
+            future.thenAccept(response -> {
+                // 在主线程中处理回复
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    try {
+                        // 发送回复给玩家
+                        if (player.isOnline()) {
+                            player.sendMessage("§e" + npc.getDisplayName() + "§f: " + response);
+                        }
+                        
+                        // 线程安全地记录对话历史
+                        lock.lock();
+                        try {
+                            npc.addConversationHistory(player.getUniqueId(), "玩家: " + message);
+                            npc.addConversationHistory(player.getUniqueId(), "NPC: " + response);
+                        } finally {
+                            lock.unlock();
+                        }
+                        failedAIRequests.incrementAndGet();
+                        
+                        // 一段时间后回到空闲状态
+                        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+                            lock.lock();
+                            try {
+                                if (npc.getCurrentState() == AIControlledNPC.NPCState.TALKING) {
+                                    npc.setCurrentState(AIControlledNPC.NPCState.IDLE);
+                                    npc.setCurrentTarget(null);
+                                }
+                            } finally {
+                            lock.unlock();
+                            processing.set(false);
+                            activeAIRequests.decrementAndGet();
+                            aiRequestSemaphore.release();
+                        }
+                        }, 100L); // 5秒后
+                        
+                    } catch (Exception e) {
+                        plugin.debug("处理NPC对话回复时发生错误: " + e.getMessage());
+                        processing.set(false);
+                    }
+                });
+            }).exceptionally(throwable -> {
+                // 在主线程中处理错误
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    try {
+                        if (player.isOnline()) {
+                            player.sendMessage("§c" + npc.getDisplayName() + " 似乎在思考中...");
+                        }
+                        plugin.debug("NPC对话AI请求失败: " + throwable.getMessage());
+                        
+                        // 重置NPC状态
+                        lock.lock();
+                        try {
+                            npc.setCurrentState(AIControlledNPC.NPCState.IDLE);
+                            npc.setCurrentTarget(null);
+                        } finally {
+                            lock.unlock();
+                        }
+                    } finally {
+                        processing.set(false);
+                        activeAIRequests.decrementAndGet();
+                        aiRequestSemaphore.release();
+                    }
+                });
+                return null;
+            });
             
-            // 一段时间后回到空闲状态
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-                if (npc.getCurrentState() == AIControlledNPC.NPCState.TALKING) {
-                    npc.setCurrentState(AIControlledNPC.NPCState.IDLE);
-                    npc.setCurrentTarget(null);
-                }
-            }, 100L); // 5秒后
-            
-        }).exceptionally(throwable -> {
-            player.sendMessage("§c" + npc.getDisplayName() + " 似乎在思考中...");
-            plugin.debug("NPC对话AI请求失败: " + throwable.getMessage());
-            return null;
-        });
+        } catch (Exception e) {
+            plugin.debug("NPC对话准备失败: " + e.getMessage());
+            processing.set(false);
+        }
     }
     
     /**
@@ -584,5 +757,70 @@ public class NPCAIDecisionMaker {
             .replace("{current_location}", String.format("%.1f, %.1f, %.1f", loc.getX(), loc.getY(), loc.getZ()))
             .replace("{world_time}", timeStr)
             .replace("{weather}", weather);
+    }
+    
+    /**
+     * 清理不再使用的NPC资源
+     */
+    public void cleanupNPCResources(String npcId) {
+        npcLocks.remove(npcId);
+        npcProcessing.remove(npcId);
+        npcProcessing.remove(npcId + "_conv");
+        lastDecisionTime.remove(npcId);
+    }
+    
+    /**
+     * 定期清理过期的资源
+     */
+    public void performMaintenance() {
+        long currentTime = System.currentTimeMillis();
+        
+        // 清理超过10分钟未使用的决策时间记录
+        lastDecisionTime.entrySet().removeIf(entry -> 
+            (currentTime - entry.getValue()) > 600000);
+        
+        // 清理孤立的处理状态
+        npcProcessing.entrySet().removeIf(entry -> {
+            String key = entry.getKey();
+            if (key.endsWith("_conv")) {
+                String npcId = key.substring(0, key.length() - 5);
+                return !lastDecisionTime.containsKey(npcId);
+            }
+            return !lastDecisionTime.containsKey(key);
+        });
+        
+        // 清理孤立的锁
+        npcLocks.entrySet().removeIf(entry -> 
+            !lastDecisionTime.containsKey(entry.getKey()));
+    }
+    
+    /**
+     * 获取AI请求性能统计
+     */
+    public String getPerformanceStats() {
+        long total = totalAIRequests.get();
+        long failed = failedAIRequests.get();
+        int active = activeAIRequests.get();
+        int available = aiRequestSemaphore.availablePermits();
+        
+        double successRate = total > 0 ? ((double)(total - failed) / total) * 100 : 0;
+        
+        return String.format("AI请求统计 - 总计: %d, 失败: %d, 成功率: %.1f%%, 活跃: %d, 可用槽位: %d",
+            total, failed, successRate, active, available);
+    }
+    
+    /**
+     * 重置性能统计
+     */
+    public void resetPerformanceStats() {
+        totalAIRequests.set(0);
+        failedAIRequests.set(0);
+    }
+    
+    /**
+     * 检查系统是否过载
+     */
+    public boolean isSystemOverloaded() {
+        return aiRequestSemaphore.availablePermits() == 0;
     }
 }
