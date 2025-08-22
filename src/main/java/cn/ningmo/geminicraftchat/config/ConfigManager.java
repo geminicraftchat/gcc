@@ -3,22 +3,55 @@ package cn.ningmo.geminicraftchat.config;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import cn.ningmo.geminicraftchat.GeminiCraftChat;
+import cn.ningmo.geminicraftchat.security.KeyEncryption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.nio.file.Paths;
 
 public class ConfigManager {
     private final GeminiCraftChat plugin;
     private FileConfiguration config;
+    private KeyEncryption keyEncryption;
 
     public ConfigManager(GeminiCraftChat plugin) {
         this.plugin = plugin;
+        this.keyEncryption = new KeyEncryption(Paths.get(plugin.getDataFolder().getAbsolutePath()));
     }
 
     public void loadConfig() {
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
         this.config = plugin.getConfig();
+        migrateApiKeys();
+    }
+
+    private void migrateApiKeys() {
+        ConfigurationSection modelsSection = config.getConfigurationSection("api.models");
+        if (modelsSection == null) {
+            return;
+        }
+        
+        boolean configChanged = false;
+        for (String modelName : modelsSection.getKeys(false)) {
+            String apiKeyPath = "api.models." + modelName + ".api_key";
+            String apiKey = config.getString(apiKeyPath);
+            
+            if (apiKey != null && !apiKey.isEmpty() && !keyEncryption.isEncrypted(apiKey)) {
+                try {
+                    String encryptedKey = keyEncryption.encrypt(apiKey);
+                    config.set(apiKeyPath, encryptedKey);
+                    configChanged = true;
+                    plugin.getLogger().info("已加密模型 " + modelName + " 的API密钥");
+                } catch (Exception e) {
+                    plugin.getLogger().severe("加密模型 " + modelName + " 的API密钥失败: " + e.getMessage());
+                }
+            }
+        }
+        
+        if (configChanged) {
+            plugin.saveConfig();
+        }
     }
 
     public FileConfiguration getConfig() {
@@ -64,7 +97,24 @@ public class ConfigManager {
 
     public String getApiKey() {
         String currentModel = getCurrentModel();
-        return config.getString("api.models." + currentModel + ".api_key");
+        String encryptedKey = config.getString("api.models." + currentModel + ".api_key");
+        if (encryptedKey == null || encryptedKey.isEmpty()) {
+            return "";
+        }
+        
+        try {
+            // 如果是加密的密钥，解密后返回
+            if (keyEncryption.isEncrypted(encryptedKey)) {
+                return keyEncryption.decrypt(encryptedKey);
+            } else {
+                // 明文密钥，记录警告并返回
+                plugin.getLogger().warning("检测到明文API密钥，建议重新加载配置以启用加密存储");
+                return encryptedKey;
+            }
+        } catch (Exception e) {
+            plugin.getLogger().severe("解密API密钥失败: " + e.getMessage());
+            return "";
+        }
     }
 
     public String getModel() {
@@ -159,4 +209,4 @@ public class ConfigManager {
         String format = getChatFormat(key);
         return String.format(format, args);
     }
-} 
+}

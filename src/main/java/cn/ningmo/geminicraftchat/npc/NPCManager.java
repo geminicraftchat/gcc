@@ -26,6 +26,7 @@ public class NPCManager implements NpcService {
     private final Map<UUID, AIControlledNPC> entityToNPC;
     private final NPCAIDecisionMaker aiDecisionMaker;
     private BukkitTask aiUpdateTask;
+    private BukkitTask cleanupTask;
     private boolean enabled;
     
     public NPCManager(GeminiCraftChat plugin) {
@@ -53,6 +54,7 @@ public class NPCManager implements NpcService {
 
         loadNPCsFromConfig();
         startAIUpdateTask();
+        startCleanupTask();
 
         plugin.getLogger().info("NPC管理器已初始化，加载了 " + npcs.size() + " 个NPC");
     }
@@ -64,6 +66,11 @@ public class NPCManager implements NpcService {
         if (aiUpdateTask != null) {
             aiUpdateTask.cancel();
             aiUpdateTask = null;
+        }
+        
+        if (cleanupTask != null) {
+            cleanupTask.cancel();
+            cleanupTask = null;
         }
         
         // 移除所有NPC实体
@@ -291,6 +298,40 @@ public class NPCManager implements NpcService {
                 updateAllNPCs();
             }
         }.runTaskTimer(plugin, 0L, updateInterval);
+    }
+    
+    /**
+     * 启动清理任务，定期清理无效的NPC引用
+     */
+    private void startCleanupTask() {
+        cleanupTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                cleanupInvalidNPCs();
+            }
+        }.runTaskTimer(plugin, 1200L, 1200L); // 每分钟执行一次
+    }
+    
+    /**
+     * 清理无效的NPC引用
+     */
+    private void cleanupInvalidNPCs() {
+        Iterator<Map.Entry<UUID, AIControlledNPC>> iterator = entityToNPC.entrySet().iterator();
+        int cleanedCount = 0;
+        
+        while (iterator.hasNext()) {
+            Map.Entry<UUID, AIControlledNPC> entry = iterator.next();
+            AIControlledNPC npc = entry.getValue();
+            
+            if (npc.getEntity() == null || npc.getEntity().isDead() || !npc.getEntity().isValid()) {
+                iterator.remove();
+                cleanedCount++;
+            }
+        }
+        
+        if (cleanedCount > 0) {
+            plugin.debug("清理了 " + cleanedCount + " 个无效的NPC引用");
+        }
     }
     
     /**

@@ -4,6 +4,7 @@ import cn.ningmo.geminicraftchat.GeminiCraftChat;
 import cn.ningmo.geminicraftchat.api.GeminiService;
 import cn.ningmo.geminicraftchat.config.ConfigManager;
 import cn.ningmo.geminicraftchat.persona.Persona;
+import cn.ningmo.geminicraftchat.security.InputValidator;
 import org.bukkit.entity.Player;
 import org.bukkit.ChatColor;
 
@@ -14,19 +15,36 @@ public class ChatManager {
     private final GeminiCraftChat plugin;
     private final GeminiService geminiService;
     private final ConfigManager configManager;
+    private final InputValidator inputValidator;
     private final Map<String, String> playerPersonas;
     private final Map<String, Long> cooldowns;
+    private final Map<String, List<String>> chatHistories;
 
     public ChatManager(GeminiCraftChat plugin) {
         this.plugin = plugin;
         this.geminiService = new GeminiService(plugin);
         this.configManager = plugin.getConfigManager();
+        this.inputValidator = new InputValidator();
         this.playerPersonas = new ConcurrentHashMap<>();
         this.cooldowns = new ConcurrentHashMap<>();
+        this.chatHistories = new ConcurrentHashMap<>();
+        
+        // 启动定期清理任务
+        startCleanupTask();
     }
 
     public void handleChat(Player player, String message) {
         String playerId = player.getName();
+        
+        // 输入验证
+        if (!inputValidator.isValidChatMessage(message)) {
+            player.sendMessage(ChatColor.RED + "消息包含无效内容，请检查后重试！");
+            plugin.getLogger().warning("玩家 " + player.getName() + " 发送了无效消息: " + inputValidator.sanitizeInput(message));
+            return;
+        }
+        
+        // 清理输入内容
+        message = inputValidator.sanitizeInput(message);
         
         // 检查冷却时间
         if (isOnCooldown(playerId)) {
@@ -201,5 +219,54 @@ public class ChatManager {
         if (geminiService != null) {
             geminiService.shutdown();
         }
+        
+        // 清理所有缓存数据
+        playerPersonas.clear();
+        cooldowns.clear();
+        chatHistories.clear();
+    }
+    
+    /**
+     * 添加聊天历史记录
+     */
+    private void addToChatHistory(String playerId, String message, String response) {
+        List<String> history = chatHistories.computeIfAbsent(playerId, k -> new ArrayList<>());
+        
+        // 添加用户消息和AI回复
+        history.add("User: " + message);
+        history.add("AI: " + response);
+        
+        // 限制历史记录长度
+        int maxHistory = configManager.getChatHistoryLimit();
+        while (history.size() > maxHistory * 2) { // *2 因为每次对话包含用户消息和AI回复
+            history.remove(0);
+            history.remove(0);
+        }
+    }
+    
+    /**
+     * 启动定期清理任务
+     */
+    private void startCleanupTask() {
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+            cleanupInactiveData();
+        }, 6000L, 6000L); // 每5分钟执行一次
+    }
+    
+    /**
+     * 清理非活跃玩家的数据
+     */
+    private void cleanupInactiveData() {
+        long currentTime = System.currentTimeMillis();
+        long inactiveThreshold = 30 * 60 * 1000; // 30分钟
+        
+        // 清理过期的冷却时间
+        cooldowns.entrySet().removeIf(entry -> currentTime - entry.getValue() > inactiveThreshold);
+        
+        // 清理非活跃玩家的聊天历史
+        chatHistories.entrySet().removeIf(entry -> {
+            String playerId = entry.getKey();
+            return plugin.getServer().getPlayer(playerId) == null;
+        });
     }
 }

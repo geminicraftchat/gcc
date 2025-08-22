@@ -158,6 +158,13 @@ public class AsyncLogManager {
     }
     
     /**
+     * 记录安全相关日志
+     */
+    public void logSecurity(String message) {
+        logAsync("security", message);
+    }
+    
+    /**
      * 初始化日志文件
      */
     private void initializeLogFiles() throws IOException {
@@ -176,6 +183,7 @@ public class AsyncLogManager {
             initializeLogWriter("errors", "errors_" + timestamp + ".log");
             initializeLogWriter("stats", "stats_" + timestamp + ".log");
             initializeLogWriter("npc", "npc_" + timestamp + ".log");
+            initializeLogWriter("security", "security_" + timestamp + ".log");
         } else {
             // 创建统一日志文件
             initializeLogWriter("general", "log_" + timestamp + ".log");

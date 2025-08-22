@@ -3,6 +3,7 @@ package cn.ningmo.geminicraftchat.listeners;
 import cn.ningmo.geminicraftchat.GeminiCraftChat;
 import cn.ningmo.geminicraftchat.chat.ChatManager;
 import cn.ningmo.geminicraftchat.config.ConfigManager;
+import cn.ningmo.geminicraftchat.security.InputValidator;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,11 +17,13 @@ public class ChatListener implements Listener {
     private final GeminiCraftChat plugin;
     private final ChatManager chatManager;
     private final ConfigManager configManager;
+    private final InputValidator inputValidator;
 
     public ChatListener(GeminiCraftChat plugin) {
         this.plugin = plugin;
         this.chatManager = plugin.getChatManager();
         this.configManager = plugin.getConfigManager();
+        this.inputValidator = new InputValidator();
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -61,8 +64,14 @@ public class ChatListener implements Listener {
                 return;
             }
 
+            // 验证输入
+            if (!inputValidator.isValidInput(question)) {
+                player.sendMessage(ChatColor.RED + "输入内容无效！");
+                return;
+            }
+
             // 处理聊天
-            chatManager.handleChat(player, question);
+            chatManager.handleChat(player, inputValidator.sanitizeInput(question));
         }
     }
 
@@ -86,7 +95,11 @@ public class ChatListener implements Listener {
                 player.sendMessage(ChatColor.RED + "请指定要切换的人设名称");
                 return true;
             }
-            if (chatManager.switchPersona(player, personaName)) {
+            if (!inputValidator.isValidPersonaName(personaName)) {
+                player.sendMessage(ChatColor.RED + "人设名称无效！");
+                return true;
+            }
+            if (chatManager.switchPersona(player, inputValidator.sanitizeInput(personaName))) {
                 player.sendMessage(ChatColor.GREEN + "已切换到人设: " + personaName);
             } else {
                 player.sendMessage(ChatColor.RED + "找不到指定的人设: " + personaName);
@@ -148,4 +161,4 @@ public class ChatListener implements Listener {
         player.sendMessage(ChatColor.YELLOW + "查看人设 " + ChatColor.WHITE + "- 显示所有可用人设");
         player.sendMessage(ChatColor.YELLOW + "帮助 " + ChatColor.WHITE + "- 显示此帮助信息");
     }
-} 
+}
