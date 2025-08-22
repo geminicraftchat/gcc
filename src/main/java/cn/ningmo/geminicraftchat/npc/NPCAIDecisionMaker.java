@@ -633,7 +633,7 @@ public class NPCAIDecisionMaker {
             lock.lock();
             try {
                 npc.setCurrentState(AIControlledNPC.NPCState.TALKING);
-                npc.setCurrentTarget(player.getLocation());
+                npc.setCurrentTarget(player);
             } finally {
                 lock.unlock();
             }
