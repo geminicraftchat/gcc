@@ -95,6 +95,41 @@ public class InputValidator {
     }
     
     /**
+     * 验证聊天消息（兼容性方法）
+     */
+    public static boolean isValidChatMessage(String message) {
+        return validateChatMessage(message).isValid();
+    }
+    
+    /**
+     * 通用输入验证（兼容性方法）
+     */
+    public static boolean isValidInput(String input) {
+        return validateChatMessage(input).isValid();
+    }
+    
+    /**
+     * 验证人格名称（兼容性方法）
+     */
+    public static boolean isValidPersonaName(String personaName) {
+        if (personaName == null || personaName.trim().isEmpty()) {
+            return false;
+        }
+        
+        // 长度检查
+        if (personaName.length() > 50) {
+            return false;
+        }
+        
+        // 只允许字母、数字、中文字符、下划线和连字符
+        if (!personaName.matches("^[\\w\\u4e00-\\u9fa5_-]+$")) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
      * 验证人格名称
      */
     public static ValidationResult validatePersonaName(String personaName) {

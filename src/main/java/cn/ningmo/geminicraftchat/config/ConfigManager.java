@@ -144,6 +144,10 @@ public class ConfigManager {
     public int getMaxHistory() {
         return config.getInt("chat.max_history", 10);
     }
+    
+    public int getChatHistoryLimit() {
+        return getMaxHistory();
+    }
 
     public String getThinkingFormat() {
         return config.getString("chat.format.thinking", "§7[AI] §f正在思考中...");
