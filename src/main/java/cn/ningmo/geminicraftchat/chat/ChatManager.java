@@ -4,7 +4,6 @@ import cn.ningmo.geminicraftchat.GeminiCraftChat;
 import cn.ningmo.geminicraftchat.api.GeminiService;
 import cn.ningmo.geminicraftchat.config.ConfigManager;
 import cn.ningmo.geminicraftchat.persona.Persona;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
@@ -51,20 +50,31 @@ public class ChatManager {
 
         // 发送请求
         geminiService.sendMessage(playerId, message, persona)
-            .thenAccept(response -> {
+            .thenAccept(response -> runOnMainThread(() -> {
+                if (!player.isOnline()) {
+                    return;
+                }
+
                 Component formattedResponse = LegacyComponentSerializer.legacySection().deserialize(
-                        String.format(configManager.getResponseFormat(), response));
+                    String.format(configManager.getResponseFormat(), response));
                 player.sendMessage(formattedResponse);
-                
+
                 // 广播回答
                 if (shouldBroadcast(player, persona)) {
                     broadcastAnswer(player, response);
                 }
-            })
+            }))
             .exceptionally(throwable -> {
-                Component error = LegacyComponentSerializer.legacySection().deserialize(
-                        String.format(configManager.getErrorFormat(), throwable.getMessage()));
-                player.sendMessage(error);
+                runOnMainThread(() -> {
+                    if (!player.isOnline()) {
+                        return;
+                    }
+
+                    String errorMessage = resolveErrorMessage(throwable);
+                    Component error = LegacyComponentSerializer.legacySection().deserialize(
+                        String.format(configManager.getErrorFormat(), errorMessage));
+                    player.sendMessage(error);
+                });
                 return null;
             });
 
@@ -200,5 +210,25 @@ public class ChatManager {
         if (geminiService != null) {
             geminiService.shutdown();
         }
+    }
+
+    public void refreshModelClient(String modelKey) {
+        geminiService.invalidateModelClient(modelKey);
+    }
+
+    private void runOnMainThread(Runnable task) {
+        if (!plugin.isEnabled()) {
+            return;
+        }
+        plugin.getServer().getScheduler().runTask(plugin, task);
+    }
+
+    private String resolveErrorMessage(Throwable throwable) {
+        Throwable root = throwable;
+        while (root.getCause() != null) {
+            root = root.getCause();
+        }
+        String message = root.getMessage();
+        return (message == null || message.isBlank()) ? "未知错误" : message;
     }
 }

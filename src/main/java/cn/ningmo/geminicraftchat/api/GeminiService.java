@@ -385,6 +385,13 @@ public class GeminiService {
         chatHistories.clear();
     }
 
+    public void invalidateModelClient(String modelKey) {
+        OkHttpClient client = modelClients.remove(modelKey);
+        if (client != null && client != baseClient) {
+            shutdownClient(client, "模型客户端 " + modelKey + "（已刷新）");
+        }
+    }
+
     /**
      * 关闭HTTP客户端
      */

@@ -12,18 +12,15 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class MainCommand implements CommandExecutor {
     private final GeminiCraftChat plugin;
-    private final ChatManager chatManager;
     private final ConfigManager configManager;
-    private final LogManager logManager;
 
     public MainCommand(GeminiCraftChat plugin) {
         this.plugin = plugin;
-        this.chatManager = plugin.getChatManager();
         this.configManager = plugin.getConfigManager();
-        this.logManager = plugin.getLogManager();
     }
 
     @Override
@@ -93,11 +90,16 @@ public class MainCommand implements CommandExecutor {
             }
         }
 
-        configManager.loadConfig();
-        sender.sendMessage(ChatColor.GREEN + "配置已重新加载！");
+        try {
+            plugin.reloadPlugin();
+            sender.sendMessage(ChatColor.GREEN + "配置已重新加载！");
 
-        String senderName = sender instanceof Player ? sender.getName() : "CONSOLE";
-        logManager.logCommand(senderName, "reload");
+            String senderName = sender instanceof Player ? sender.getName() : "CONSOLE";
+            getLogManager().logCommand(senderName, "reload");
+        } catch (Exception e) {
+            sender.sendMessage(ChatColor.RED + "配置重载失败: " + e.getMessage());
+            plugin.getLogger().log(Level.SEVERE, "执行重载时发生错误", e);
+        }
     }
 
     private void handleClear(CommandSender sender, String[] args) {
@@ -111,14 +113,14 @@ public class MainCommand implements CommandExecutor {
                     return;
                 }
             }
-            chatManager.clearAllHistory();
+            getChatManager().clearAllHistory();
             sender.sendMessage(ChatColor.GREEN + "已清除所有玩家的对话历史！");
-            logManager.logCommand(senderName, "clear all");
+            getLogManager().logCommand(senderName, "clear all");
         } else {
             if (sender instanceof Player) {
-                chatManager.clearHistory(sender.getName());
+                getChatManager().clearHistory(sender.getName());
                 sender.sendMessage(ChatColor.GREEN + "已清除你的对话历史！");
-                logManager.logCommand(senderName, "clear");
+                getLogManager().logCommand(senderName, "clear");
             } else {
                 sender.sendMessage(ChatColor.RED + "控制台无法清除个人历史记录，请使用 'clear all' 清除所有历史记录！");
             }
@@ -140,7 +142,7 @@ public class MainCommand implements CommandExecutor {
         sender.sendMessage(ChatColor.GREEN + "调试模式已" + (!debugEnabled ? "启用" : "禁用"));
 
         String senderName = sender instanceof Player ? sender.getName() : "CONSOLE";
-        logManager.logCommand(senderName, "debug " + (!debugEnabled ? "enable" : "disable"));
+        getLogManager().logCommand(senderName, "debug " + (!debugEnabled ? "enable" : "disable"));
     }
 
     private void handleModelSwitch(CommandSender sender, String[] args) {
@@ -164,7 +166,7 @@ public class MainCommand implements CommandExecutor {
         if (configManager.switchModel(modelName)) {
             String modelDisplayName = configManager.getModelDisplayName(modelName);
             sender.sendMessage(ChatColor.GREEN + "已切换到模型: " + modelDisplayName);
-            logManager.logModelChange(senderName, modelName);
+            getLogManager().logModelChange(senderName, modelName);
         } else {
             sender.sendMessage(ChatColor.RED + "找不到指定的模型: " + modelName);
         }
@@ -195,7 +197,7 @@ public class MainCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.GREEN + "已将温度设置为: " + temp);
 
             String senderName = sender instanceof Player ? sender.getName() : "CONSOLE";
-            logManager.logTemperatureChange(senderName, temp);
+            getLogManager().logTemperatureChange(senderName, temp);
         } catch (NumberFormatException e) {
             sender.sendMessage(ChatColor.RED + "无效的温度值！请输入0.0到1.0之间的数字。");
         }
@@ -209,7 +211,7 @@ public class MainCommand implements CommandExecutor {
 
         switch (args[1].toLowerCase()) {
             case "list":
-                List<String> personas = chatManager.getAvailablePersonas();
+                List<String> personas = getChatManager().getAvailablePersonas();
                 sender.sendMessage(ChatColor.GREEN + "可用的人设列表:");
                 for (String persona : personas) {
                     String name = configManager.getConfig().getString("personas." + persona + ".name", persona);
@@ -233,9 +235,9 @@ public class MainCommand implements CommandExecutor {
                 String personaName = args[2].toLowerCase();
                 String senderName = sender.getName();
 
-                if (chatManager.switchPersona(player, personaName)) {
+                if (getChatManager().switchPersona(player, personaName)) {
                     sender.sendMessage(ChatColor.GREEN + "已切换到人设: " + personaName);
-                    logManager.logCommand(senderName, "persona switch " + personaName);
+                    getLogManager().logCommand(senderName, "persona switch " + personaName);
                 } else {
                     sender.sendMessage(ChatColor.RED + "找不到指定的人设: " + personaName);
                 }
@@ -281,7 +283,7 @@ public class MainCommand implements CommandExecutor {
     }
 
     private void showLogStats(CommandSender sender) {
-        Map<String, Object> stats = logManager.getStats();
+        Map<String, Object> stats = getLogManager().getStats();
 
         sender.sendMessage(ChatColor.GREEN + "=== 日志统计信息 ===");
         sender.sendMessage(ChatColor.YELLOW + "总API调用次数: " + ChatColor.WHITE + stats.getOrDefault("totalApiCalls", 0));
@@ -310,25 +312,25 @@ public class MainCommand implements CommandExecutor {
         sender.sendMessage(ChatColor.YELLOW + "保留天数: " + ChatColor.WHITE + retentionDays + " 天");
 
         String senderName = sender instanceof Player ? sender.getName() : "CONSOLE";
-        logManager.logCommand(senderName, "logs stats");
+        getLogManager().logCommand(senderName, "logs stats");
     }
 
     private void resetLogStats(CommandSender sender) {
-        logManager.resetStats();
+        getLogManager().resetStats();
         sender.sendMessage(ChatColor.GREEN + "日志统计数据已重置！");
 
         String senderName = sender instanceof Player ? sender.getName() : "CONSOLE";
-        logManager.logCommand(senderName, "logs reset");
+        getLogManager().logCommand(senderName, "logs reset");
     }
 
     private void exportPlayerStats(CommandSender sender) {
         // 触发玩家统计导出到日志文件
-        logManager.logPlayerStats();
+        getLogManager().logPlayerStats();
         sender.sendMessage(ChatColor.GREEN + "玩家统计信息已导出到日志文件！");
         sender.sendMessage(ChatColor.GRAY + "请查看 plugins/GeminiCraftChat/logs/ 目录下的统计文件");
 
         String senderName = sender instanceof Player ? sender.getName() : "CONSOLE";
-        logManager.logCommand(senderName, "logs export");
+        getLogManager().logCommand(senderName, "logs export");
     }
 
     private void handleTimeout(CommandSender sender, String[] args) {
@@ -390,7 +392,7 @@ public class MainCommand implements CommandExecutor {
         }
 
         String senderName = sender instanceof Player ? sender.getName() : "CONSOLE";
-        logManager.logCommand(senderName, "timeout list");
+        getLogManager().logCommand(senderName, "timeout list");
     }
 
     private void showTimeoutInfo(CommandSender sender, String modelKey) {
@@ -419,7 +421,7 @@ public class MainCommand implements CommandExecutor {
         }
 
         String senderName = sender instanceof Player ? sender.getName() : "CONSOLE";
-        logManager.logCommand(senderName, "timeout info " + modelKey);
+        getLogManager().logCommand(senderName, "timeout info " + modelKey);
     }
 
     private void toggleLongThinking(CommandSender sender, String modelKey) {
@@ -434,6 +436,7 @@ public class MainCommand implements CommandExecutor {
 
         configManager.getConfig().set(configPath, newValue);
         plugin.saveConfig();
+        getChatManager().refreshModelClient(modelKey);
 
         String modelName = configManager.getModelDisplayName(modelKey);
         String status = newValue ? "启用" : "禁用";
@@ -447,7 +450,7 @@ public class MainCommand implements CommandExecutor {
         }
 
         String senderName = sender instanceof Player ? sender.getName() : "CONSOLE";
-        logManager.logCommand(senderName, "timeout toggle " + modelKey + " -> " + status);
+        getLogManager().logCommand(senderName, "timeout toggle " + modelKey + " -> " + status);
     }
 
     private void sendHelpMessage(CommandSender sender) {
@@ -487,4 +490,12 @@ public class MainCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.GRAY + "注意：控制台拥有所有管理员权限");
         }
     }
-} 
+
+    private ChatManager getChatManager() {
+        return plugin.getChatManager();
+    }
+
+    private LogManager getLogManager() {
+        return plugin.getLogManager();
+    }
+}

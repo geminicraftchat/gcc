@@ -10,8 +10,16 @@ import cn.ningmo.geminicraftchat.metrics.MetricsManager;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Set;
 
 public class GeminiCraftChat extends JavaPlugin {
+    private static final Set<String> INVALID_API_KEY_PLACEHOLDERS = Set.of(
+        "your-api-key-here",
+        "your-gemini-key-here",
+        "your-deepseek-key-here",
+        "sk-..."
+    );
+
     private static GeminiCraftChat instance;
     private ConfigManager configManager;
     private ChatManager chatManager;
@@ -144,7 +152,7 @@ public class GeminiCraftChat extends JavaPlugin {
     private void validateConfig() {
         String currentModel = configManager.getCurrentModel();
         String apiKey = configManager.getApiKey();
-        if (apiKey == null || apiKey.isEmpty() || apiKey.equals("your-gemini-key-here") || apiKey.equals("your-deepseek-key-here")) {
+        if (isPlaceholderApiKey(apiKey)) {
             throw new IllegalStateException("模型 " + currentModel + " 的API密钥未设置");
         }
         
@@ -171,6 +179,40 @@ public class GeminiCraftChat extends JavaPlugin {
                 pluginLogger.warning("敏感词过滤已启用但未配置敏感词列表");
             }
         }
+    }
+
+    public synchronized void reloadPlugin() {
+        pluginLogger.info("正在重新加载 GeminiCraftChat...");
+
+        // 先加载并校验配置，失败时保留旧组件继续运行
+        configManager.loadConfig();
+        validateConfig();
+
+        // 新建组件，确保新配置完整生效
+        LogManager newLogManager = new LogManager(this);
+        ChatManager newChatManager = new ChatManager(this);
+
+        ChatManager oldChatManager = this.chatManager;
+        LogManager oldLogManager = this.logManager;
+
+        this.logManager = newLogManager;
+        this.chatManager = newChatManager;
+
+        if (oldChatManager != null) {
+            oldChatManager.shutdown();
+        }
+        if (oldLogManager != null) {
+            oldLogManager.closeLog();
+        }
+
+        pluginLogger.info("GeminiCraftChat 重载完成");
+    }
+
+    private boolean isPlaceholderApiKey(String apiKey) {
+        if (apiKey == null || apiKey.isBlank()) {
+            return true;
+        }
+        return INVALID_API_KEY_PLACEHOLDERS.contains(apiKey.trim().toLowerCase());
     }
 
     public static GeminiCraftChat getInstance() {

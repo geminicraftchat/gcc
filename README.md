@@ -1,18 +1,18 @@
 # GeminiCraftChat
 
-[![版本](https://img.shields.io/badge/版本-1.0.9-blue.svg)](https://github.com/geminicraftchat/gcc/releases)
+[![版本](https://img.shields.io/badge/版本-1.0.9.1-blue.svg)](https://github.com/geminicraftchat/gcc/releases)
 [![许可证](https://img.shields.io/badge/许可证-MIT-green.svg)](LICENSE)
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.13+-orange.svg)](https://www.minecraft.net/)
-[![Paper](https://img.shields.io/badge/Paper-1.21.4-blue.svg)](https://papermc.io/)
+[![Paper](https://img.shields.io/badge/Paper-1.21.10-blue.svg)](https://papermc.io/)
 [![Java](https://img.shields.io/badge/Java-21+-red.svg)](https://openjdk.java.net/)
 
 > **Language / 语言**: [English](docs/en/README.md) | [中文](docs/zh/README.md) | [📚 Documentation Hub](docs/README.md)
 
-一个极其强大且现代化的 Minecraft 聊天 AI 插件，现已完美适配 **Paper 1.21.4** 和 **Leaves** 服务端。支持多种大语言模型（LLM）集成。
+一个极其强大且现代化的 Minecraft 聊天 AI 插件，现已完美适配 **Paper 1.21.10** 和 **Leaves 1.21.10** 服务端。支持多种大语言模型（LLM）集成。
 
-## 🆕 最新更新 (v1.0.9)
+## 🆕 最新更新 (v1.0.9.1)
 
-- 🚀 **全面支持 Paper 1.21.4** - 采用最新的 `AsyncChatEvent` API。
+- 🚀 **全面支持 Paper 1.21.10 / Leaves 1.21.10** - 采用最新的 `AsyncChatEvent` API。
 - 🍃 **Leaves 深度优化** - 针对 Leaves 服务端的专有优化和 API 支持。
 - ✨ **Adventure API 集成** - 全新消息渲染引擎，支持更丰富的交互体验。
 - 🛡️ **线程安全增强** - 彻底修复多模型并发请求下的历史记录冲突问题。
